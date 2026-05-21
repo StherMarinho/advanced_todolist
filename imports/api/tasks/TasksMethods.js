@@ -1,3 +1,4 @@
+//responsabilidade: CRUD das tarefas.
 import {Meteor} from 'meteor/meteor';
 import { TasksCollection } from './TasksCollection';
 import { use } from 'react';

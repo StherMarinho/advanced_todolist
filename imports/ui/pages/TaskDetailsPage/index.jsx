@@ -1,0 +1,1 @@
+//mostrar detalhes de uma tarefa específica, como descrição, data de criação, data de conclusão, etc.

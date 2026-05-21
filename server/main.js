@@ -1,8 +1,13 @@
+//responsável por inicializar o servidor Meteor, inicializar bd
 import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
 import { TasksCollection } from "/imports/api/TasksCollection";
-import "../imports/api/TasksPublications";
-import "../imports/api/TasksMethods";
+import "../imports/api/tasks/TasksPublications";
+import "../imports/api/tasks/TasksMethods";
+import "../imports/api/accounts/accountsConfig";
+import "../imports/api/accounts/accountsHooks";
+import "../imports/api/accounts/usersPublications";
+
 
 const insertTask = (taskText, user) => 
   TasksCollection.insertAsync({ 

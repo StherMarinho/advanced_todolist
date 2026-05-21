@@ -1,0 +1,1 @@
+//Responsabilidade: lista de tarefas, filtros; pesquisa; paginação.
