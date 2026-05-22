@@ -10,9 +10,6 @@ const CustomTextField = ({
     error = ""
 }) => {
 
-    const handleChange = (evento) => {
-        onChange(evento.target.value);
-};
     return (
         <div className="custom-textField">
             <label>
@@ -22,7 +19,7 @@ const CustomTextField = ({
             <input
                 type={type}
                 value={value}
-                onChange={handleChange}
+                onChange={onChange}
                 required={required}
                 placeholder={placeholder}
             />

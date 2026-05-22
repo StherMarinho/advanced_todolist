@@ -6,11 +6,9 @@ import { Accounts } from "meteor/accounts-base";
 import { Link, useNavigate } from "react-router-dom";
 
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
-
 import CustomTextField from "../../components/CustomTextField/index";
-
-import CustomButton from "../../components/CustomButtom/index";
-
+import CustomButton from "../../components/CustomButton/index";
+import FormCard from "../../components/FormCard";
 import "./RegisterPage.css";
 
 const RegisterPage = () => {
@@ -49,7 +47,7 @@ const RegisterPage = () => {
 
     return (
         <AuthLayout>
-            <div className="register-container">
+            <FormCard>
                 <div className="register-header">
                     <h1>Cadastro</h1>
                     <p>
@@ -111,7 +109,7 @@ const RegisterPage = () => {
                         Faça login
                     </Link>
                 </p>
-            </div>
+            </FormCard>
         </AuthLayout>
     );
 };

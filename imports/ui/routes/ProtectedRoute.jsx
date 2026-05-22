@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children }) => {
     const user = Meteor.user(); 
 
     if (!user) {
-        return <Navigate to="/login" />;
+        return <Navigate to="/" />;
     }
 
     return children;

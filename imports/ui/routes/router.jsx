@@ -1,22 +1,43 @@
 import React from "react";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import { Meteor } from "meteor/meteor";
 
 import LoginPage from "../pages/LoginPage/index";
+import RegisterPage from "../pages/RegisterPage/index";
 import HomePage from "../pages/HomePage/index";
 import DashboardPage from "../pages/DashboardPage/index";
 import TasksPage from "../pages/TasksPage/index";
 import ProfilePage from "../pages/ProfilePage/index";
+import ProtectedRoute from "./ProtectedRoute";
+import MainLayout from "../layouts/MainLayout";
 
-export const router = createBrowserRouter([
+function ProtectedRoute({ children }) {
+    if (!Meteor.userId()) {
+        return <Navigate to="/login" replace />;
+    }
+    return children;
+}
+
+const router = createBrowserRouter([
     {
         path: "/",
-        element: <LoginPage />,
+        element: <Navigate to="/login"/>
+    },
+    {
+        path: "/login",
+        element: <LoginPage />
+    },
+    {
+        path: "/register",
+        element: <RegisterPage />,
     },
     {
         path: "/home",
         element:(
             <ProtectedRoute>
-                <HomePage />
+                <MainLayout>
+                    <HomePage />
+                </MainLayout>
             </ProtectedRoute>
         ), 
         
@@ -46,3 +67,5 @@ export const router = createBrowserRouter([
         ),
     },
 ]);
+
+export default router;

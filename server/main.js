@@ -1,7 +1,7 @@
 //responsável por inicializar o servidor Meteor, inicializar bd
 import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
-import { TasksCollection } from "/imports/api/TasksCollection";
+import { TasksCollection } from "../imports/api/tasks/TasksCollection";
 import "../imports/api/tasks/TasksPublications";
 import "../imports/api/tasks/TasksMethods";
 import "../imports/api/accounts/accountsConfig";
