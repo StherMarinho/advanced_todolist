@@ -1,13 +1,19 @@
 //menu lateral
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Drawer,List,ListItem,ListItemButton, ListItemText,ListItemIcon, IconButton,Toolbar,Typography,Box, Divider } from '@mui/material';
-import { Menu as MenuIcon, Home, Task, Dashboard, Person } from '@mui/icons-material';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Meteor } from "meteor/meteor";
+import { useTracker } from "meteor/react-meteor-data";
+
+import { Drawer, List, ListItem, ListItemButton, ListItemText, ListItemIcon, IconButton, Toolbar, Typography, Box, Divider, Avatar } from "@mui/material";
+
+import { Menu as MenuIcon, Home, Task, Person } from "@mui/icons-material";
 
 const drawerWidth = 200;
 const collapsedWidth = 72;
 
 const DrawerMenu = ({ open, setOpen }) => {
+
+    const user = useTracker(() => Meteor.user());
 
     const menuItems = [
         {
@@ -37,7 +43,8 @@ const DrawerMenu = ({ open, setOpen }) => {
                 "& .MuiDrawer-paper": {
                     width: open ? drawerWidth : collapsedWidth,
                     boxSizing: "border-box",
-                    transition: "0.2s"
+                    transition: "0.2s",
+                    overflowX: "hidden"
                 }
             }}
         >
@@ -47,11 +54,11 @@ const DrawerMenu = ({ open, setOpen }) => {
                     justifyContent: open ? "flex-end" : "center"
                 }}
             >
-                <IconButton 
+                <IconButton
                     onClick={() => setOpen(!open)}
                     disableRipple
                     sx={{
-                        "&:hover":{
+                        "&:hover": {
                             backgroundColor: "white"
                         }
                     }}
@@ -62,6 +69,54 @@ const DrawerMenu = ({ open, setOpen }) => {
 
             <Divider />
 
+            {/* DADOS DO USUÁRIO */}
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    py: 3,
+                    px: 1
+                }}
+            >
+                <Avatar
+                    src={user?.profile?.photo || ""}
+                    sx={{
+                        width: open ? 80 : 45,
+                        height: open ? 80 : 45,
+                        mb: 1
+                    }}
+                />
+
+                {
+                    open && (
+                        <>
+                            <Typography
+                                variant="subtitle1"
+                                fontWeight="bold"
+                                textAlign="center"
+                            >
+                                {user?.profile?.name || "Usuário"}
+                            </Typography>
+
+                            <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                textAlign="center"
+                                sx={{
+                                    wordBreak: "break-word"
+                                }}
+                            >
+                                {user?.emails?.[0]?.address || ""}
+                            </Typography>
+                        </>
+                    )
+                }
+            </Box>
+
+            <Divider />
+
+            {/* MENU */}
             <List>
                 {
                     menuItems.map((item) => (
@@ -75,9 +130,16 @@ const DrawerMenu = ({ open, setOpen }) => {
                                 sx={{
                                     display: "flex",
                                     justifyContent: open ? "initial" : "center",
+                                    px: 2.5
                                 }}
                             >
-                                <ListItemIcon>
+                                <ListItemIcon
+                                    sx={{
+                                        minWidth: 0,
+                                        mr: open ? 2 : "auto",
+                                        justifyContent: "center"
+                                    }}
+                                >
                                     {item.icon}
                                 </ListItemIcon>
 

@@ -7,5 +7,11 @@ Meteor.publish("tasks", function() { //porque mudar de () => para function()? Po
     if (!userId) {
         return this.ready(); //o que é "this.ready()"? Ele é usado para indicar que a publicação está pronta e não há mais dados a serem enviados para o cliente. Isso é útil quando você tem uma condição que impede a publicação de dados, como no caso de um usuário não autenticado. Ao chamar this.ready(), você informa ao cliente que a publicação terminou e que ele pode parar de esperar por dados.
     }
-    return TasksCollection.find({ userId }); //retorna apenas as tarefas que pertencem ao usuário atualmente autenticado, garantindo que cada usuário só veja suas próprias tarefas.
+    return TasksCollection.find({
+        $or: [ //$or é um operador lógico do MongoDB que permite combinar várias condições. Ele retorna os documentos que satisfazem pelo menos uma das condições especificadas. No contexto,o $or é usadopara garantir que o usuário veja tanto as tarefas públicas quanto as suas próprias tarefas privadas.
+            { isPrivate: false },
+            //{isPrivate: { $exists: false } }, //caso a tarefa não tenha o campo isPrivate, ela será considerada pública e estará disponível para todos os usuários.
+            { userId: userId }
+        ]
+    }); //retorna apenas as tarefas que pertencem ao usuário atualmente autenticado, garantindo que cada usuário só veja suas próprias tarefas.
 });

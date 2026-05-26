@@ -1,30 +1,33 @@
-import "./CustomTextField.css";
+import { TextField } from "@mui/material";
 
-const CustomTextField = ({ 
-    label, 
+const CustomTextField = ({
+    label,
     type = "text",
-    value, 
-    onChange, 
-    required = false,
+    value,
+    onChange,
     placeholder = "",
-    error = ""
+    error = "",
+    select = false,
+    children,
+    ...props
 }) => {
 
     return (
-        <div className="custom-textField">
-            <label>
-                {label}
-            </label>
-
-            <input
-                type={type}
-                value={value}
-                onChange={onChange}
-                required={required}
-                placeholder={placeholder}
-            />
-            {error && <span className="error">{error}</span>}
-        </div>
+        <TextField
+            fullWidth
+            label={label}
+            type={type}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
+            error={!!error}
+            helperText={error}
+            select={select}
+            margin="normal"
+            {...props}
+        >
+            {children}
+        </TextField>
     );
 };
 

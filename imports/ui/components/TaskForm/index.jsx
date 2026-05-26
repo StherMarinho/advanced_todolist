@@ -1,1 +1,106 @@
 //formulário para criar ou editar uma tarefa
+import { Box, MenuItem, Checkbox, FormControlLabel } from "@mui/material";
+import { useState } from "react";
+
+import { Meteor } from "meteor/meteor";
+
+import CustomButton from "../CustomButton/index";
+import CustomTextField from "../CustomTextField/index";
+
+const TaskForm = ({ task, onCancel, onSuccess }) => {
+    const [name, setName] = useState(task ? task.name : "");
+    const [description, setDescription] = useState(task ? task.description : "");
+    const [status, setStatus] = useState(task ? task.status : "Cadastrada");
+    const [isPrivate, setIsPrivate] = useState(task ? task.isPrivate : false);
+
+    function handleSubmit(evento) {
+        evento.preventDefault();
+        console.log({
+            name,
+            description,
+            status,
+            isPrivate
+        });
+        if (task) {
+            Meteor.call("tasks.update", { _taskId: task._id, name, description, status, isPrivate },
+                () => {
+                    onSuccess();
+                }
+            );
+        } else {
+            Meteor.call(
+                "tasks.insert",
+                { name, description, status, isPrivate },
+                (error, result) => {
+                    if (error) {
+                        console.log(error);
+                        return;
+                    }
+
+                    console.log("Tarefa criada:", result);
+
+                    onSuccess();
+                }
+            );
+        } 
+    }
+
+    return (
+        <Box 
+            component="form" 
+            onSubmit={handleSubmit} 
+            sx={{ mt: 2 }}
+        >
+            <CustomTextField
+                label="Nome da Tarefa"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Digite o nome da tarefa"
+            />
+            <CustomTextField
+                label="Descrição"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Digite a descrição da tarefa"
+            />
+
+            <Box mt={2}>
+                <CustomTextField
+                    label="Status"
+                    select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                >
+                    <MenuItem value="Cadastrada">Cadastrada</MenuItem>
+                    <MenuItem value="Em Andamento">Em Andamento</MenuItem>
+                    <MenuItem value="Concluída">Concluída</MenuItem>
+                </CustomTextField>
+            </Box>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={isPrivate}
+                        onChange={(e) => setIsPrivate(e.target.checked)}
+                    />
+                }
+                label="Tarefa Pessoal"
+            />
+            <Box
+                mt={3}
+                display="flex"
+                gap={2}
+            >
+                <CustomButton
+                    text="Salvar"
+                    type="submit"
+                />
+                <CustomButton
+                    text="Cancelar"
+                    onClick={onCancel}
+                />
+            </Box>
+        </Box>
+    );
+};
+
+export default TaskForm;

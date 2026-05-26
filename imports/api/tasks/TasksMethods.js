@@ -1,29 +1,56 @@
 //responsabilidade: CRUD das tarefas.
 import {Meteor} from 'meteor/meteor';
 import { TasksCollection } from './TasksCollection';
-import { use } from 'react';
 
 Meteor.methods({ //Os métodos são essencialmente chamadas RPC ao servidor que permitem realizar operações no lado do servidor de forma segura
-    "tasks.insert"(taskData) {
+    "tasks.insert": async function({name , description, status, isPrivate}) {
         if (!this.userId) {
-            throw new Meteor.Error('Not authorized.');
+            throw new Meteor.Error('Não autorizado.');
         }
-        return TasksCollection.insertAsync({
-            ...taskData, //porque usar "...taskData"? O operador de espalhamento (...) é usado para criar um novo objeto que contém todas as propriedades do objeto taskData. Isso é útil para garantir que estamos criando um novo documento com os dados fornecidos, em vez de modificar o objeto original. Além disso, ao usar ...taskData, podemos adicionar outras propriedades ao objeto resultante, como userId e createdAt, sem afetar o objeto taskData original.
-            userId: this.userId,
+        return await TasksCollection.insertAsync({
+            name,
+            description,    
+            status: status || "Cadastrada",
+            isPrivate,
             createdAt: new Date(),
+            createdBy: Meteor.user()?.profile?.name || "Usuário",
+            userId: this.userId,
         });
     },
-    "tasks.update"({ _taskId, updateData }) {
-        return TasksCollection.updateAsync(_taskId, {
-            $set: updateData,
+    "tasks.update": async function({ _taskId, name, description, status, isPrivate }) {
+        const task = await TasksCollection.findOneAsync(_taskId);
+        if(task.userId !== this.userId) {
+            throw new Meteor.Error('Não autorizado.');
+        }
+        return await TasksCollection.updateAsync(_taskId, {
+            $set: { 
+                name, 
+                description,
+                status,
+                isPrivate
+            },
         });
     },
-    "tasks.delete"({ _taskId }) { //função para excluir a tarefa e fornecer essa função na propriedade de retorno de chamada (callback) do Taskcomponente.
-        return TasksCollection.removeAsync(_taskId);
+    "tasks.remove": async function({ _taskId }) {
+        if(!this.userId) {
+            throw new Meteor.Error('Não autorizado.');
+        }
+        const task = await TasksCollection.findOneAsync(_taskId);
+        if (!task) {
+        throw new Meteor.Error("Tarefa não encontrada.");
+    }
+
+    if (task.userId !== this.userId) {
+        throw new Meteor.Error("Apenas o criador pode excluir.");
+    }
+        return await TasksCollection.removeAsync(_taskId);
     },
-    "tasks.changeStatus"({ _taskId, status }) {
-        return TasksCollection.updateAsync(_taskId, {
+    "tasks.changeStatus": async function({ _taskId, status }) {
+        const task = await TasksCollection.findOneAsync(_taskId);
+        if(task.userId !== this.userId) {
+            throw new Meteor.Error('Não autorizado.');
+        }
+        return await TasksCollection.updateAsync(_taskId, {
             $set: { 
                 status 
             },

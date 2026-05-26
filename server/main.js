@@ -1,43 +1,56 @@
-//responsável por inicializar o servidor Meteor, inicializar bd
 import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
-import { TasksCollection } from "../imports/api/tasks/TasksCollection";
+
 import "../imports/api/tasks/TasksPublications";
 import "../imports/api/tasks/TasksMethods";
+
 import "../imports/api/accounts/accountsConfig";
 import "../imports/api/accounts/accountsHooks";
 import "../imports/api/accounts/usersPublications";
+import "../imports/api/accounts/usersMethods";
 
+import { TasksCollection } from "../imports/api/tasks/TasksCollection";
 
-const insertTask = (taskText, user) => 
-  TasksCollection.insertAsync({ 
-    text: taskText,
-    userId: user._id,
-    createdAt: new Date(),
-  });
+const SEED_USERNAME = "meteorite";
+const SEED_PASSWORD = "password";
 
-const SEED_USERNAME = 'meteorite';
-const SEED_PASSWORD = 'password';
+Meteor.startup(async () => {
 
-Meteor.startup(async() => {
-  if(!(await Accounts.findUserByUsername(SEED_USERNAME))) {
-    await Accounts.createUser({
-      username: SEED_USERNAME,
-      password: SEED_PASSWORD
-    });
-  }
+    let user = await Accounts.findUserByUsername(SEED_USERNAME);
 
-const user = await Accounts.findUserByUsername(SEED_USERNAME);
+    if (!user) {
 
-if((await TasksCollection.find().countAsync()) === 0) {
-  [
-      "First Task",
-      "Second Task",
-      "Third Task", 
-      "Fourth Task",
-      "Fifth Task",
-      "Sixth Task",
-      "Seventh Task",
-    ].forEach((taskText) => insertTask(taskText, user));
-  } //adicionando algumas tarefas a ele, iterando sobre um array de strings e, para cada string, chamando uma função para inserir essa string como um textcampo em nosso taskdocumento.
+        const userId = await Accounts.createUser({
+            username: SEED_USERNAME,
+            password: SEED_PASSWORD,
+            profile: {
+                name: "Meteor User"
+            }
+        });
+
+        user = await Meteor.users.findOneAsync(userId);
+    }
+
+    if ((await TasksCollection.find().countAsync()) === 0) {
+
+        await TasksCollection.insertAsync({
+            name: "Primeira tarefa",
+            description: "Descrição da primeira tarefa",
+            status: "Cadastrada",
+            createdAt: new Date(),
+            createdBy: "Meteor User",
+            userId: user._id,
+        });
+
+        await TasksCollection.insertAsync({
+            name: "Segunda tarefa",
+            description: "Descrição da segunda tarefa",
+            status: "Em Andamento",
+            createdAt: new Date(),
+            createdBy: "Meteor User",
+            userId: user._id,
+        });
+
+    }
+
 });

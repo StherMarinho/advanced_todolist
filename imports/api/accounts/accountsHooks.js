@@ -1,4 +1,4 @@
-//função: customizar a criação de usuários, adicionando campos personalizados, etc.
+//função: customizar a criação de usuários, adicionando campos personalizados (ações automáticas ao criar usuário).
 import { Accounts } from "meteor/accounts-base";
 
 Accounts.onCreateUser((options, user) => {
