@@ -4,12 +4,11 @@ const FormCard = ({ children, sx = {} }) => {
     return (
         <Box
             sx={{
-                minHeight: "100vh",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                background: "linear-gradient(135deg, #0f172a, #1e293b)",
-                p: 3,
+                //background: "linear-gradient(135deg, #0f172a, #1e293b)",
+                p: 2,
             }}
         >
             <Paper
@@ -19,7 +18,8 @@ const FormCard = ({ children, sx = {} }) => {
                     maxWidth: 420,
                     p: 5,
                     borderRadius: 4,
-                    backgroundColor: "#1e293b",
+                    backgroundColor: "#bfc2c7",
+                    //backgroundColor: "#1e293b",
                     ...sx
                 }}
             >

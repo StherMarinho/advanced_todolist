@@ -4,11 +4,12 @@ import { Meteor } from "meteor/meteor";
 import { useTracker } from "meteor/react-meteor-data";
 
 import { Box, Paper, Typography, MenuItem, Avatar } from "@mui/material";
+import { DateField } from "@mui/x-date-pickers/DateField";
+import dayjs from "dayjs";
 
 import CustomTextField from "../../components/CustomTextField/index";
 import CustomButton from "../../components/CustomButton/index";
 import FormCard from "../../components/FormCard";
-import "./styles.css";
 
 const ProfilePage = () => {
     Meteor.subscribe("usersData");
@@ -16,7 +17,7 @@ const ProfilePage = () => {
     const user = useTracker(() => Meteor.user());
 
     const [name, setName] = useState(user?.profile?.name || "");
-    const [birthDate, setBirthDate] = useState(user?.profile?.birthDate || "");
+    const [birthDate, setBirthDate] = useState(user?.profile?.birthDate ? dayjs(user.profile.birthDate) : null);
     const [genero, setGenero] = useState(user?.profile?.genero || "");
     const [empresa, setEmpresa] = useState(user?.profile?.empresa || "");
     const [photo, setPhoto] = useState(user?.profile?.photo || "");
@@ -24,7 +25,7 @@ const ProfilePage = () => {
     useEffect(() =>{
         if(user && !name){
             setName(user.profile?.name || "");
-            setBirthDate(user.profile?.birthDate || "");
+            setBirthDate(user.profile?.birthDate ? dayjs(user.profile.birthDate) : null);
             setGenero(user.profile?.genero || "");
             setEmpresa(user.profile?.empresa || "");
             setPhoto(user.profile?.photo || "");
@@ -45,7 +46,13 @@ const ProfilePage = () => {
 
     function handleSubmit(evento) {
         evento.preventDefault();
-        Meteor.call("users.updateProfile", { name, birthDate, genero, empresa, photo }, 
+        Meteor.call("users.updateProfile", { 
+            name, 
+            birthDate: birthDate ? birthDate.toDate() : null, 
+            genero, 
+            empresa, 
+            photo 
+        }, 
             (erro) => {
                 if (erro) {
                 console.log(erro);
@@ -80,7 +87,7 @@ const ProfilePage = () => {
                 maxWidth: 600,
                 p: 5,
                 borderRadius: 4,
-                backgroundColor: "#1e293b",
+                //backgroundColor: "#1e293b",
             }}
         >
             <Typography
@@ -148,15 +155,17 @@ const ProfilePage = () => {
                     disabled
                 />
 
-                <CustomTextField
-                    label="Data de Nascimento"
-                    type="date"
-                    value={birthDate}
-                    onChange={(e) => setBirthDate(e.target.value)}
-                    InputLabelProps={{
-                        shrink: true
-                    }}
-                />
+                <DateField
+                        label="Data de Nascimento"
+                        value={birthDate}
+                        onChange={(newValue) => setBirthDate(newValue)}
+                        format="DD/MM/YYYY"
+                        fullWidth
+                        /*slotProps={{ inputLabel: { shrink: true } }}
+                        InputLabelProps={{
+                            shrink: true
+                        }}*/
+                    />
 
                 <CustomTextField
                     label="Gênero"
@@ -183,11 +192,15 @@ const ProfilePage = () => {
                     onChange={(e) => setEmpresa(e.target.value)}
                 />
 
-                <Box mt={2}>
-                    <CustomButton
+                <Box>
+                    <CustomButton    
                         text="Salvar Alterações"
                         type="submit"
-                    />
+                        sx={{
+                            mt: 2
+                        }}
+                    >
+                    </CustomButton>
                 </Box>
             </Box>
         </Paper>

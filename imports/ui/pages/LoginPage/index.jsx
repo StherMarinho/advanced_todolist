@@ -1,13 +1,14 @@
 //Responsabilidade: Página de login, cadastro, autenticação e recuperação de senha.
 import {useState} from "react";
 import {Meteor} from "meteor/meteor";
+
 import { Link, useNavigate } from "react-router-dom";
+import { MenuItem, Typography, Box, Link as MuiLink } from "@mui/material";
+
 import CustomTextField from "../../components/CustomTextField/index";
 import CustomButton from "../../components/CustomButton/index";
 import FormCard from "../../components/FormCard";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
-
-import "./Login.css";
 
 const LoginPage = () => {
     const navigate = useNavigate(); 
@@ -15,6 +16,7 @@ const LoginPage = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    
     const handleLogin = (evento) => {
         evento.preventDefault();
         setError("");
@@ -37,15 +39,36 @@ const LoginPage = () => {
     return (
         <AuthLayout>
             <FormCard>
-                <div className="login-header">
-                    <h1>Login</h1>
-                    <p>
+                <Box
+                    textAlign="center"
+                    sx={{
+                        mb: 3
+                    }}
+                >
+                    <Typography
+                        variant="h4"
+                        fontWeight="bold"
+                        gutterBottom
+                    >
+                        Login
+                    </Typography>
+
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                    >
                         Faça login para acessar o sistema
-                    </p>
-                </div>
-                <form
-                    className="login-form"
+                    </Typography>
+                </Box>
+
+                <Box
+                    component="form"
                     onSubmit={handleLogin}
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 2
+                    }}
                 >
                     <CustomTextField
                         label="E-mail"
@@ -54,6 +77,7 @@ const LoginPage = () => {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Digite seu e-mail"
                     />
+
                     <CustomTextField
                         label="Senha"
                         type="password"
@@ -61,26 +85,51 @@ const LoginPage = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Digite sua senha"
                     />
-                    {
-                        error &&
-                        <p className="login-error">
+                    {error && (
+                        <Typography
+                            color="error"
+                            variant="body2"
+                        >
                             {error}
-                        </p>
-                    }
+                        </Typography>
+                    )}
+
                     <CustomButton
-                        text="Entrar"
+                        text={loading ? "Entrando..." : "Entrar"}
                         type="submit"
+                        disabled={loading}
                     />
-                </form>
-                <p className="login-register-text">
-                    Não possui conta?
-                    <Link
-                        to="/register"
-                        className="login-register-link"
+                </Box>
+
+                <Box
+                    sx={{
+                        mt: 3,
+                        textAlign: "center"
+                    }}
+                >
+                    <Typography
+                        textAlign="center"
+                        mt={3}
+                        color="text.secondary"
+                        variant="body2"
                     >
-                        Criar conta
-                    </Link>
-                </p>
+                        Não possui conta?
+
+                        <MuiLink
+                            component={Link}
+                            to="/register"
+                            sx={{
+                                ml: 1,
+                                fontWeight: "bold",
+                                textDecoration: "none",
+                                cursor: "pointer"
+                            }}
+                        >
+                            Criar conta
+                        </MuiLink>
+                    </Typography>
+                </Box>
+
             </FormCard>
         </AuthLayout>
     );

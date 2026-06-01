@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom"; //biblioteca padrão para criar rot
 import { Meteor } from "meteor/meteor";
 
 const ProtectedRoute = ({ children }) => {
-    const user = Meteor.user(); 
+    const user = Meteor.userId();
 
     if (!user) {
         return <Navigate to="/" />;

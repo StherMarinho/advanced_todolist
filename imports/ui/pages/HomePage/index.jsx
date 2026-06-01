@@ -1,10 +1,72 @@
-//tela pós login, filtrar as tarefas mais recentes do usuário, mostrar as tarefas pendentes; um resumo do que o usuário tem para fazer.
-import React from "react";
-import Layout from "../../layouts/MainLayout/index";
+import { Meteor } from "meteor/meteor";
+import { useTracker } from "meteor/react-meteor-data";
+import { useNavigate } from "react-router-dom";
+
+import { Box, Typography } from "@mui/material";
+
+import { TasksCollection } from "../../../api/tasks/TasksCollection";
+
+import Dashboard from "../../components/Dashbord";
 
 const HomePage = () => {
+
+    const navigate = useNavigate();
+
+    const user = useTracker(() => Meteor.user());
+
+    const tasks = useTracker(() => {
+
+        Meteor.subscribe("tasks",true);
+
+        return TasksCollection.find({
+            userId: user?._id
+        }).fetch();
+
+    });
+
+    const totalTasks = tasks.length;
+
+    const pendingTasks = tasks.filter(
+        (task) => task.status === "Cadastrada"
+    ).length;
+
+    const currentTasks = tasks.filter(
+        (task) => task.status === "Em Andamento"
+    ).length;
+
+    const completedTasks = tasks.filter(
+        (task) => task.status === "Concluída"
+    ).length;
+
     return (
-            <h1>Home</h1>
+
+        <Box
+            sx={{
+                p: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+            }}
+        >
+
+            <Typography
+                variant="h4"
+                textAlign="center"
+                fontWeight="bold"
+            >
+                Olá {user?.profile?.name},
+                seja bem-vindo ao To Do List
+            </Typography>
+
+            <Dashboard
+                totalTasks={totalTasks}
+                pendingTasks={pendingTasks}
+                currentTasks={currentTasks}
+                completedTasks={completedTasks}
+            >
+            </Dashboard>
+
+        </Box>
     );
 };
 

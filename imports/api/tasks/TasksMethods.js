@@ -4,16 +4,23 @@ import { TasksCollection } from './TasksCollection';
 
 Meteor.methods({ //Os métodos são essencialmente chamadas RPC ao servidor que permitem realizar operações no lado do servidor de forma segura
     "tasks.insert": async function({name , description, status, isPrivate}) {
+        /*console.log("user:" + Meteor.user());
+        console.log("profile:" + Meteor.user()?.profile);
+        console.log("name:" + Meteor.user()?.profile?.name);*/
         if (!this.userId) {
             throw new Meteor.Error('Não autorizado.');
         }
+
+        const user = await Meteor.users.findOneAsync(this.userId);
+        console.log("user encontrado:",user);
+
         return await TasksCollection.insertAsync({
             name,
             description,    
             status: status || "Cadastrada",
             isPrivate,
             createdAt: new Date(),
-            createdBy: Meteor.user()?.profile?.name || "Usuário",
+            createdBy: user?.profile?.name || "Usuário",
             userId: this.userId,
         });
     },

@@ -1,5 +1,5 @@
 //formulário para criar ou editar uma tarefa
-import { Box, MenuItem, Checkbox, FormControlLabel } from "@mui/material";
+import { Box, MenuItem, Checkbox, FormControlLabel, Stack } from "@mui/material";
 import { useState } from "react";
 
 import { Meteor } from "meteor/meteor";
@@ -49,7 +49,9 @@ const TaskForm = ({ task, onCancel, onSuccess }) => {
         <Box 
             component="form" 
             onSubmit={handleSubmit} 
-            sx={{ mt: 2 }}
+            sx={{ 
+                mt: 2
+            }}
         >
             <CustomTextField
                 label="Nome da Tarefa"
@@ -86,18 +88,36 @@ const TaskForm = ({ task, onCancel, onSuccess }) => {
                 label="Tarefa Pessoal"
             />
             <Box
-                mt={3}
-                display="flex"
-                gap={2}
+                sx={{
+                    display: "flex",
+                    justifyContent:"center"
+                }}
             >
-                <CustomButton
-                    text="Salvar"
-                    type="submit"
-                />
-                <CustomButton
-                    text="Cancelar"
-                    onClick={onCancel}
-                />
+                <Stack
+                    direction={{ xs: "column", sm: "row" }}
+                    spacing={{ xs: 1, sm: 2 }}
+                    mt={3}
+                    >
+                    <CustomButton
+                        text="Salvar"
+                        type="submit"
+                        fullWidth={false}
+                        sx={{
+                            width: 100,
+                            height: 50
+                        }}
+                    />
+                    <CustomButton
+                        text="Cancelar"
+                        onClick={onCancel}
+                        fullWidth={false}
+                        sx={{
+                            width: 100,
+                            height: 50,
+                            mt: 2
+                        }}
+                    />
+                </Stack>
             </Box>
         </Box>
     );

@@ -42,17 +42,6 @@ const router = createBrowserRouter([
     },
 
     {
-        path: "/dashboard",
-        element: (
-            <ProtectedRoute>
-                <MainLayout>
-                    <DashboardPage />
-                </MainLayout>
-            </ProtectedRoute>
-        ),
-    },
-
-    {
         path: "/tasks",
         element: (
             <ProtectedRoute>

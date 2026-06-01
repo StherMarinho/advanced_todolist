@@ -1,12 +1,12 @@
 //menu lateral
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import { useTracker } from "meteor/react-meteor-data";
 
 import { Drawer, List, ListItem, ListItemButton, ListItemText, ListItemIcon, IconButton, Toolbar, Typography, Box, Divider, Avatar } from "@mui/material";
 
-import { Menu as MenuIcon, Home, Task, Person } from "@mui/icons-material";
+import { Menu as MenuIcon, Home, Task, Person, Logout } from "@mui/icons-material";
 
 const drawerWidth = 200;
 const collapsedWidth = 72;
@@ -14,6 +14,7 @@ const collapsedWidth = 72;
 const DrawerMenu = ({ open, setOpen }) => {
 
     const user = useTracker(() => Meteor.user());
+    const navigate = useNavigate();
 
     const menuItems = [
         {
@@ -30,6 +31,13 @@ const DrawerMenu = ({ open, setOpen }) => {
             text: "Perfil",
             icon: <Person />,
             path: "/profile"
+        },
+        {
+            text: "Logout",
+            icon: <Logout />,
+            action: () => Meteor.logout(() => {
+                navigate("/login");
+            })
         }
     ];
 
@@ -69,7 +77,6 @@ const DrawerMenu = ({ open, setOpen }) => {
 
             <Divider />
 
-            {/* DADOS DO USUÁRIO */}
             <Box
                 sx={{
                     display: "flex",
@@ -116,7 +123,6 @@ const DrawerMenu = ({ open, setOpen }) => {
 
             <Divider />
 
-            {/* MENU */}
             <List>
                 {
                     menuItems.map((item) => (
@@ -125,7 +131,9 @@ const DrawerMenu = ({ open, setOpen }) => {
                             disablePadding
                         >
                             <ListItemButton
-                                component={Link}
+                                // component={Link}
+                                onClick={item.action}
+                                component={item.path ? Link : "button"}
                                 to={item.path}
                                 sx={{
                                     display: "flex",

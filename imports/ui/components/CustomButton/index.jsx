@@ -12,7 +12,7 @@ const CustomButton = ({
 }) => {
     return (
         <Button
-            fullWidth
+            fullWidth={true}
             type={type}
             onClick={onClick}
             disabled={disabled}

@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import { Accounts } from "meteor/accounts-base";
 
 import { Link, useNavigate } from "react-router-dom";
-import { MenuItem, Typography, Box } from "@mui/material";
+import { MenuItem, Typography, Box, Link as MuiLink } from "@mui/material";
+import { DateField } from "@mui/x-date-pickers/DateField";
 
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
 import CustomTextField from "../../components/CustomTextField/index";
@@ -17,7 +18,7 @@ const RegisterPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [birthDate, setBirthDate] = useState("");
+    const [birthDate, setBirthDate] = useState(null);
     const [genero, setGenero] = useState("");
     const [empresa, setEmpresa] = useState("");
     const [error, setError] = useState("");
@@ -36,7 +37,7 @@ const RegisterPage = () => {
                 password,
                 profile: {
                     name,
-                    birthDate,
+                    birthDate: birthDate ? birthDate.format("YYYY-MM-DD") : "",
                     genero,
                     empresa,
                     photo: ""
@@ -54,24 +55,39 @@ const RegisterPage = () => {
 
     return (
         <AuthLayout>
+            <FormCard>
+                <Box
+                    mb={4}
+                    sx={{
+                        textAlign: "center"
+                    }}
+                >
 
-            <FormCard
-                sx={{
-                    maxWidth: 500
-                }}
-            >
+                    <Typography
+                        variant="h4"
+                        fontWeight="bold"
+                        gutterBottom
+                    >
+                        Cadastro
+                    </Typography>
 
-                <div className="login-header">
-                    <h1>Cadastro</h1>
-
-                    <p>
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                    >
                         Cadastre-se para acessar o sistema
-                    </p>
-                </div>
+                    </Typography>
 
-                <form
-                    className="login-form"
+                </Box>
+
+                <Box
+                    component="form"
                     onSubmit={handleRegister}
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 2
+                    }}
                 >
 
                     <CustomTextField
@@ -101,14 +117,16 @@ const RegisterPage = () => {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
 
-                    <CustomTextField
+                    <DateField
                         label="Data de Nascimento"
-                        type="date"
                         value={birthDate}
-                        onChange={(e) => setBirthDate(e.target.value)}
+                        onChange={(newValue) => setBirthDate(newValue)}
+                        format="DD/MM/YYYY"
+                        fullWidth
+                        /*slotProps={{ inputLabel: { shrink: true } }}
                         InputLabelProps={{
                             shrink: true
-                        }}
+                        }}*/
                     />
 
                     <CustomTextField
@@ -117,7 +135,6 @@ const RegisterPage = () => {
                         value={genero}
                         onChange={(e) => setGenero(e.target.value)}
                     >
-
                         <MenuItem value="Masculino">
                             Masculino
                         </MenuItem>
@@ -129,7 +146,6 @@ const RegisterPage = () => {
                         <MenuItem value="Outro">
                             Outro
                         </MenuItem>
-
                     </CustomTextField>
 
                     <CustomTextField
@@ -137,33 +153,60 @@ const RegisterPage = () => {
                         value={empresa}
                         onChange={(e) => setEmpresa(e.target.value)}
                     />
-
                     {
-                        error &&
-                        <p className="login-error">
-                            {error}
-                        </p>
+                        error && (
+                            <Typography
+                                color="error"
+                                variant="body2"
+                            >
+                                {error}
+                            </Typography>
+                        )
                     }
-
-                    <CustomButton
-                        text="Cadastrar"
-                        type="submit"
-                        disabled={loading}
-                    />
-
-                </form>
-
-                <p className="login-register-text">
-                    Já possui conta?
-
-                    <Link
-                        to="/login"
-                        className="login-register-link"
+                    <Box
+                        sx={{
+                            mt: 3,
+                            textAlign: "center"
+                        }}
                     >
-                        Faça login
-                    </Link>
+                        <CustomButton
+                            text="Cadastrar"
+                            type="submit"
+                            disabled={loading}
+                        />
+                    
+                    </Box>
+                </Box>
 
-                </p>
+                <Box
+                    sx={{
+                        mt: 3,
+                        textAlign: "center"
+                    }}
+                >
+                    <Typography
+                        color="text.secondary"
+                        variant="body2"
+                    >
+                        Já possui conta?
+
+
+                        <MuiLink
+                            component={Link}
+                            to="/login"
+                            sx={{
+                                ml: 1,
+                                fontWeight: "bold",
+                                textDecoration: "none",
+                                cursor: "pointer"
+                            }}
+                        >
+                            Faça login
+                        </MuiLink>
+
+                    </Typography>
+                </Box>
+
 
             </FormCard>
 

@@ -3,6 +3,9 @@ import { useTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 
 import { Box, Typography, Paper, Stack } from "@mui/material";
+import ArrowBack from "@mui/icons-material/ArrowBack";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
 import { useState } from "react";
 
@@ -13,9 +16,9 @@ import CustomButton from "../../components/CustomButton";
 
 
 const TaskDetailsPage = () => {
+    const navigate = useNavigate();
     const { id } = useParams();
     const isNewTask = !id;
-    const navigate = useNavigate();
     const [isEditing, setIsEditing] = useState(false);
 
     const task = useTracker(() => {
@@ -23,7 +26,7 @@ const TaskDetailsPage = () => {
         if (isNewTask) {
             return null;
         }
-        const subscription = Meteor.subscribe("tasks");
+        const subscription = Meteor.subscribe("tasks", true);
 
         if (!subscription.ready()) {
             return null;
@@ -46,10 +49,14 @@ const TaskDetailsPage = () => {
         );
     }
 
-    // NOVA TAREFA
+    // nova tarefa
     if (isNewTask) {
         return (
-            <Paper sx={{ p: 4 }}>
+            <Paper 
+                sx={{ 
+                    p: 4 
+                }}
+            >
 
                 <Typography
                     variant="h4"
@@ -66,7 +73,6 @@ const TaskDetailsPage = () => {
             </Paper>
         );
     }
-    // LOADING / NÃO ENCONTROU
     if (!task) {
         return (
             <Typography variant="h5">
@@ -74,16 +80,37 @@ const TaskDetailsPage = () => {
             </Typography>
         );
     }
-
-    // VISUALIZAÇÃO / EDIÇÃO
+    //editar/ver detalhes da tarefa
     return (
-        <Paper sx={{ p: 4 }}>
-            <Typography
-                variant="h4"
-                mb={3}
+        <Paper 
+            sx={{
+                p: 4 
+            }}
+        >
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems:"center",
+                    mb: 3
+                }}
             >
-                Detalhes da Tarefa
-            </Typography>
+                <Typography
+                    variant="h4"
+                    mb={3}
+                >
+                    Detalhes da Tarefa
+                </Typography>
+
+                <Tooltip title="Voltar para lista de tarefas">
+                    <IconButton
+                        onClick={() => navigate("/tasks")}
+                    >
+                        <ArrowBack />
+                    </IconButton>
+                </Tooltip>
+                
+            </Box>
             {
                 isEditing ? (
                     <TaskForm
@@ -97,32 +124,129 @@ const TaskDetailsPage = () => {
 
                 ) : (
                     <Box>
-                        <Typography>
-                            <strong>Nome:</strong> {task.name}
-                        </Typography>
+                        <Box
+                            sx={{
+                                mt: 2
+                            }}          
+                        >
+                            <Box
+                                sx={{
+                                    mb: 0.5,
+                                    display: "flex",
+                                    gap: 1,
+                                    alignItems: "center"
+                                }}
+                            >
+                                <Typography
+                                    sx={{
+                                        fontWeight: "bold"
+                                    }}
+                                >
+                                    Nome:
+                                </Typography>
 
-                        <Typography>
-                            <strong>Descrição:</strong> {task.description}
-                        </Typography>
+                                <Typography
+                                >
+                                    {task.name}
+                                </Typography>
+                            </Box>
 
-                        <Typography>
-                            <strong>Status:</strong> {task.status}
-                        </Typography>
+                            <Box
+                                sx={{
+                                    mb: 0.5,
+                                    display: "flex",
+                                    gap: 1,
+                                    alignItems: "center"
+                                }}
+                            >
+                                <Typography
+                                    sx={{
+                                        fontWeight: "bold"
+                                    }}
+                                >
+                                    Descrição:
+                                </Typography>
 
-                        <Typography>
-                            <strong>Criado por:</strong> {task.createdBy}
-                        </Typography>
+                                <Typography
+                                >
+                                    {task.description}
+                                </Typography>
+                            </Box>
 
-                        <Typography>
-                            <strong>Data:</strong> {
-                                task.createdAt?.toLocaleDateString()
-                            }
-                        </Typography>
+                            <Box
+                                sx={{
+                                    mb: 0.5,
+                                    display: "flex",
+                                    gap: 1,
+                                    alignItems: "center"
+                                }}
+                            >
+                                <Typography
+                                    sx={{
+                                        fontWeight: "bold"
+                                    }}
+                                >
+                                    Status:
+                                </Typography>
+
+                                <Typography
+                                >
+                                    {task.status}
+                                </Typography>
+                            </Box>
+
+                            <Box
+                                sx={{
+                                    mb: 0.5,
+                                    display: "flex",
+                                    gap: 1,
+                                    alignItems: "center"
+                                }}
+                            >
+                                <Typography
+                                    sx={{
+                                        fontWeight: "bold"
+                                    }}
+                                >
+                                    Criado por:
+                                </Typography>
+
+                                <Typography
+                                >
+                                    {task.createdBy}
+                                </Typography>
+                            </Box>
+
+                            <Box
+                                sx={{
+                                    mb: 0.5,
+                                    display: "flex",
+                                    gap: 1,
+                                    alignItems: "center"
+                                }}
+                            >
+                                <Typography
+                                    sx={{
+                                        fontWeight: "bold"
+                                    }}
+                                >
+                                    Data:
+                                </Typography>
+
+                                <Typography
+                                >
+                                    {task.createdAt?.toLocaleDateString()}
+                                </Typography>
+                            </Box>
+                        </Box>
+
                         {isOwner && (
                             <Stack
                                 direction="row"
                                 spacing={2}
-                                mt={4}
+                                sx={{
+                                    mt: 3
+                                }}          
                             >
 
                                 <CustomButton
@@ -152,6 +276,7 @@ const TaskDetailsPage = () => {
                                         handleStatusChange("Cadastrada")
                                     }
                                 />
+                                
                             </Stack>
                         )}
                     </Box>
