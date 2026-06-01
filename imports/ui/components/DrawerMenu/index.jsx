@@ -67,7 +67,7 @@ const DrawerMenu = ({ open, setOpen }) => {
                     disableRipple
                     sx={{
                         "&:hover": {
-                            backgroundColor: "white"
+                            backgroundColor: "#f8fafc"
                         }
                     }}
                 >

@@ -12,7 +12,7 @@ const DashboardCard = ({ title, value, children }) => {
                 height: 180,
                 p: 2,
                 borderRadius: 3,
-                bgcolor:"#ffff",
+                bgcolor:"#f8fafc",
                 display: "flex",
                 flexDirection:"column",
                 justifyContent: "space-between",

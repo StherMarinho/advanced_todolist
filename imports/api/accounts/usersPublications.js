@@ -1,6 +1,5 @@
 //função: publicar dados seguros do usuário, como nome, email, para o cliente.
 import { Meteor } from "meteor/meteor";
-import { Accounts } from "meteor/accounts-base";
 
 Meteor.publish("usersData", function () {
     if (!this.userId) {

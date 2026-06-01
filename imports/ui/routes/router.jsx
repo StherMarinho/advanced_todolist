@@ -5,7 +5,6 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import LoginPage from "../pages/LoginPage/index";
 import RegisterPage from "../pages/RegisterPage/index";
 import HomePage from "../pages/HomePage/index";
-import DashboardPage from "../pages/DashboardPage/index";
 import TasksPage from "../pages/TasksPage/index";
 import TaskDetailsPage from "../pages/TaskDetailsPage/index";
 import ProfilePage from "../pages/ProfilePage/index";

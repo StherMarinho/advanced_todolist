@@ -9,7 +9,6 @@ import dayjs from "dayjs";
 
 import CustomTextField from "../../components/CustomTextField/index";
 import CustomButton from "../../components/CustomButton/index";
-import FormCard from "../../components/FormCard";
 
 const ProfilePage = () => {
     Meteor.subscribe("usersData");
@@ -87,14 +86,14 @@ const ProfilePage = () => {
                 maxWidth: 600,
                 p: 5,
                 borderRadius: 4,
-                //backgroundColor: "#1e293b",
+                backgroundColor: "#f8fafc",
             }}
         >
             <Typography
                 variant="h4"
                 textAlign="center"
                 fontWeight="bold"
-                color="white"
+                color="black"
                 mb={4}
             >
                 Meu Perfil

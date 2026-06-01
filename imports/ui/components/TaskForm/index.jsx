@@ -50,7 +50,9 @@ const TaskForm = ({ task, onCancel, onSuccess }) => {
             component="form" 
             onSubmit={handleSubmit} 
             sx={{ 
-                mt: 2
+                mt: 2,
+                backgroundColor: "#f8fafc",
+
             }}
         >
             <CustomTextField

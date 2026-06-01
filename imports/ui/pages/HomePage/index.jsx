@@ -16,7 +16,7 @@ const HomePage = () => {
 
     const tasks = useTracker(() => {
 
-        Meteor.subscribe("tasks",true);
+        Meteor.subscribe("tasks",true,"",1);
 
         return TasksCollection.find({
             userId: user?._id

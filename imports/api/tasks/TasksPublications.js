@@ -46,5 +46,5 @@ Meteor.publish("tasks", function(showCompletedTasks, searchText, page) { //porqu
         skip: skip,
         limit: limit
     }
-    ); //retorna apenas as tarefas que pertencem ao usuário atualmente autenticado, garantindo que cada usuário só veja suas próprias tarefas.
+    ); //retorna as tarefas que são públicas ou que pertencem ao usuário autenticado, e que também atendem aos filtros de status e nome, aplicando a paginação com skip e limit.
 });
