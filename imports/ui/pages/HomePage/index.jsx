@@ -1,20 +1,26 @@
 import { Meteor } from "meteor/meteor";
 import { useTracker } from "meteor/react-meteor-data";
-import { useNavigate } from "react-router-dom";
 
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, MenuItem } from "@mui/material";
 
 import { TasksCollection } from "../../../api/tasks/TasksCollection";
 
 import Dashboard from "../../components/Dashbord";
+import CustomTextField from "../../components/CustomTextField";
+
 import { TASKS_STATUS } from "../../../constants/tasksStatus";
+import { dashboardFilter } from "../../state/taskFilter";
 
 const HomePage = () => {
 
     const user = useTracker(() => Meteor.user());
 
+    const filter = useTracker(() => {
+        return dashboardFilter.get();
+    });
+
     const subscription = useTracker(() => {
-        return Meteor.subscribe("tasksSummary");
+        return Meteor.subscribe("tasksSummary", filter);
     });
 
     const tasks = useTracker(() => {
@@ -65,6 +71,37 @@ const HomePage = () => {
                 Olá {user?.profile?.name},
                 seja bem-vindo(a) ao To Do List
             </Typography>
+
+            <Box
+                sx={{
+                    width: {
+                        xs: "100%",
+                        sm: 300
+                    },
+                    minWidth: 250,
+                    mt: 3
+                }}
+            >
+                <CustomTextField
+                        label="Exibir"
+                        select
+                        value={filter}
+                        onChange={(e) => dashboardFilter.set(e.target.value)}
+                    >
+
+                        <MenuItem value="all">
+                            Tarefas Públicas e Pessoais
+                        </MenuItem>
+
+                        <MenuItem value="private">
+                            Minhas Tarefas
+                        </MenuItem>
+
+                        <MenuItem value="public">
+                            Tarefas Públicas
+                        </MenuItem>
+                    </CustomTextField>
+            </Box>
 
             <Dashboard
                 totalTasks={totalTasks}

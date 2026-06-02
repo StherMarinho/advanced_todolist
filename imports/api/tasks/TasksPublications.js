@@ -63,15 +63,39 @@ Meteor.publish("taskById", function (taskId) {
         ]
     });
 });
-Meteor.publish("tasksSummary", function () {
+Meteor.publish("tasksSummary", function (dashboardFilter) {
     const userId = this.userId;
 
-    if (!userId) return this.ready();
+    if (!userId) {
+        return this.ready();
+    }
 
-    return TasksCollection.find({
-        $or: [
-            { isPrivate: false },
-            { userId }
-        ]
-    });
+    let visibilityFilter = {};
+
+    if (dashboardFilter === "private") {
+        visibilityFilter = {
+            userId 
+        };
+    }
+
+    if (dashboardFilter === "public") {
+        visibilityFilter = { 
+            isPrivate: false 
+        };
+    }
+
+    if (dashboardFilter === "all") {
+        visibilityFilter = {
+            $or: [
+                { 
+                    isPrivate: false 
+                },
+                { 
+                    userId 
+                }
+            ]
+        };
+    }
+
+    return TasksCollection.find(visibilityFilter);      
 });
