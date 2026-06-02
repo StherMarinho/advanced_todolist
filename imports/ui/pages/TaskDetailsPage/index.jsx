@@ -13,6 +13,7 @@ import { TasksCollection } from "../../../api/tasks/TasksCollection";
 
 import TaskForm from "../../components/TaskForm";
 import CustomButton from "../../components/CustomButton";
+import { TASKS_STATUS } from "../../../constants/tasksStatus";
 
 
 const TaskDetailsPage = () => {
@@ -21,19 +22,20 @@ const TaskDetailsPage = () => {
     const isNewTask = !id;
     const [isEditing, setIsEditing] = useState(false);
 
-    const task = useTracker(() => {
-
-        if (isNewTask) {
-            return null;
-        }
-        const subscription = Meteor.subscribe("tasks", true);
-
-        if (!subscription.ready()) {
-            return null;
-        }
-        return TasksCollection.findOne(id);
-
+    const subscription = useTracker(() => {
+        return Meteor.subscribe("taskById", id);
     }, [id]);
+
+    const isLoading = !subscription.ready();
+
+    const task = useTracker(() => {
+        return TasksCollection.findOne(id);
+    }, [id]);
+
+    const user = useTracker(() => {
+        return Meteor.users.findOne(task?.userId);
+    }, [task?.userId]);
+    
     const isOwner = task?.userId === Meteor.userId(); //"?." é o operador de encadeamento opcional, que permite acessar a propriedade userId de task sem causar um erro se task for null ou undefined. 
 
 
@@ -45,6 +47,11 @@ const TaskDetailsPage = () => {
             {
                 _taskId: task._id,
                 status
+            },
+            (error) => {
+                if (error) {
+                    alert("Erro ao atualizar status: " + error.message || error.reason);
+                }
             }
         );
     }
@@ -54,7 +61,10 @@ const TaskDetailsPage = () => {
         return (
             <Paper 
                 sx={{ 
-                    p: 4 
+                    p: {
+                        xs: 2,
+                        md: 4
+                    }
                 }}
             >
 
@@ -90,14 +100,26 @@ const TaskDetailsPage = () => {
             <Box
                 sx={{
                     display: "flex",
+                    flexDirection: {
+                        xs: "column",
+                        md: "row"
+                    },
                     justifyContent: "space-between",
-                    alignItems:"center",
-                    mb: 3
+                    alignItems:{
+                        xs: "flex-start",
+                        md: "center"
+                    },
+                    gap: 2
                 }}
             >
                 <Typography
-                    variant="h4"
                     mb={3}
+                    sx={{
+                        fontSize: {
+                            xs: "24px",
+                            md: "40px"
+                        }
+                    }}
                 >
                     Detalhes da Tarefa
                 </Typography>
@@ -134,7 +156,14 @@ const TaskDetailsPage = () => {
                                     mb: 0.5,
                                     display: "flex",
                                     gap: 1,
-                                    alignItems: "center"
+                                    flexDirection: {
+                                        xs: "column",
+                                        md: "row"
+                                    },
+                                    alignItems: {
+                                        xs: "flex-start",
+                                        md: "center"
+                                    }
                                 }}
                             >
                                 <Typography
@@ -213,7 +242,7 @@ const TaskDetailsPage = () => {
 
                                 <Typography
                                 >
-                                    {task.createdBy}
+                                    {user?.profile?.name || "Usuário"}
                                 </Typography>
                             </Box>
 
@@ -242,10 +271,14 @@ const TaskDetailsPage = () => {
 
                         {isOwner && (
                             <Stack
-                                direction="row"
+                                direction= {{
+                                    xs: "column",
+                                    md: "row"
+                                }}
                                 spacing={2}
                                 sx={{
-                                    mt: 3
+                                    mt: 3,
+                                    width: "100%"
                                 }}          
                             >
 
@@ -256,24 +289,24 @@ const TaskDetailsPage = () => {
 
                                 <CustomButton
                                     text="Iniciar"
-                                    disabled={task.status !== "Cadastrada"}
+                                    disabled={task.status !== TASKS_STATUS.CREATED}
                                     onClick={() =>
-                                        handleStatusChange("Em Andamento")
+                                        handleStatusChange(TASKS_STATUS.IN_PROGRESS)
                                     }
                                 />
 
                                 <CustomButton
                                     text="Concluir"
-                                    disabled={task.status !== "Em Andamento"}
+                                    disabled={task.status !== TASKS_STATUS.IN_PROGRESS}
                                     onClick={() =>
-                                        handleStatusChange("Concluída")
+                                        handleStatusChange(TASKS_STATUS.COMPLETED)
                                     }
                                 />
 
                                 <CustomButton
                                     text="Resetar"
                                     onClick={() =>
-                                        handleStatusChange("Cadastrada")
+                                        handleStatusChange(TASKS_STATUS.CREATED)
                                     }
                                 />
                                 

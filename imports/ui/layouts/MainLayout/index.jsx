@@ -1,16 +1,16 @@
-import { Draw } from '@mui/icons-material';
-import React, { useState } from "react";
+import { Box } from "@mui/material";
+import { useState } from "react";
 import DrawerMenu from '../../components/DrawerMenu/index';
-import "./MainLayout.css";
 
 const MainLayout = ({ children }) => {
-
     const [open, setOpen] = useState(true);
 
     return (
-        <div
-            style={{
-                display: "flex"
+        <Box
+            sx={{
+                display: "flex",
+                minHeight: "100vh",
+                width: "100%"
             }}
         >
             <DrawerMenu
@@ -18,15 +18,25 @@ const MainLayout = ({ children }) => {
                 setOpen={setOpen}
             />
 
-            <main
-                style={{
-                    flex: 1,
-                    padding: "24px"
+            <Box
+                component="main"
+                sx={{
+                    flexGrow: 1,
+                    width: {
+                        xs: "100%",
+                        md: "auto"
+                    },
+                    p: {
+                        xs: 1.5,
+                        sm: 2,
+                        md: 3
+                    },
+                    overflowX: "hidden"
                 }}
             >
                 {children}
-            </main>
-        </div>
+            </Box>
+        </Box>
     );
 };
 

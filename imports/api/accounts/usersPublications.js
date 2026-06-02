@@ -18,3 +18,18 @@ Meteor.publish("usersData", function () {
         }
     );
 });
+
+Meteor.publish("tasksUsers", function () {
+    if (!this.userId) {
+        return this.ready(); // Se o usuário não estiver autenticado, a publicação é finalizada imediatamente.
+    }
+
+    return Meteor.users.find(
+        {},
+        {
+            fields: {
+                "profile.name": 1, // Publica o campo de nome do perfil de todos os usuários.
+            },
+        }
+    );
+});

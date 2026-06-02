@@ -21,37 +21,57 @@ const RegisterPage = () => {
     const [birthDate, setBirthDate] = useState(null);
     const [genero, setGenero] = useState("");
     const [empresa, setEmpresa] = useState("");
-    const [error, setError] = useState("");
+    const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
 
     function handleRegister(evento) {
-        evento.preventDefault();
-        setError("");
-        if (password !== confirmPassword) {
-            setError("As senhas não coincidem. Tente novamente.");
-            return;
-        }
-        Accounts.createUser(
-            {
-                email,
-                password,
-                profile: {
-                    name,
-                    birthDate: birthDate ? birthDate.format("YYYY-MM-DD") : "",
-                    genero,
-                    empresa,
-                    photo: ""
-                },
-            },
-            (erro) => {
-                if (erro) {
-                    setError("Ocorreu um erro ao criar a conta. Tente novamente.");
-                    return;
-                }
-                navigate("/login");
-            }
-        );
+    evento.preventDefault();
+
+    const newErrors = {};
+
+    if (!name) newErrors.name = "Nome obrigatório";
+    if (!email) newErrors.email = "Email obrigatório";
+    if (!password) newErrors.password = "Senha obrigatória";
+    if (!confirmPassword) newErrors.confirmPassword = "Confirme a senha";
+
+    if (password && password.length < 6) {
+        newErrors.password = "Mínimo 6 caracteres";
     }
+
+    if (password !== confirmPassword) {
+        newErrors.confirmPassword = "As senhas não coincidem";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) return;
+
+    setLoading(true);
+
+    Accounts.createUser(
+        {
+            email,
+            password,
+            profile: {
+                name,
+                birthDate: birthDate ? birthDate.format("YYYY-MM-DD") : "",
+                genero,
+                empresa,
+                photo: ""
+            },
+        },
+        (erro) => {
+            setLoading(false);
+
+            if (erro) {
+                setErrors({ general: "Erro ao criar conta" });
+                return;
+            }
+
+            navigate("/login");
+        }
+    );
+}
 
     return (
         <AuthLayout>
@@ -92,28 +112,36 @@ const RegisterPage = () => {
 
                     <CustomTextField
                         label="Nome"
+                        required
                         value={name}
+                        error={errors.name}
                         onChange={(e) => setName(e.target.value)}
                     />
 
                     <CustomTextField
                         label="Email"
+                        required
                         type="email"
                         value={email}
+                        error={errors.email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
 
                     <CustomTextField
                         label="Senha"
+                        required
                         type="password"
                         value={password}
+                        error={errors.password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
 
                     <CustomTextField
                         label="Confirmar Senha"
+                        required
                         type="password"
                         value={confirmPassword}
+                        error={errors.confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
 
@@ -153,19 +181,10 @@ const RegisterPage = () => {
                         value={empresa}
                         onChange={(e) => setEmpresa(e.target.value)}
                     />
-                    {
-                        error && (
-                            <Typography
-                                color="error"
-                                variant="body2"
-                            >
-                                {error}
-                            </Typography>
-                        )
-                    }
+                    
                     <Box
                         sx={{
-                            mt: 3,
+                            mt: 2,
                             textAlign: "center"
                         }}
                     >
@@ -180,7 +199,7 @@ const RegisterPage = () => {
 
                 <Box
                     sx={{
-                        mt: 3,
+                        mt: 4,
                         textAlign: "center"
                     }}
                 >

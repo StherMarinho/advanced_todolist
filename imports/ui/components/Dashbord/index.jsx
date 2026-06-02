@@ -33,7 +33,8 @@ const Dashboard =({ totalTasks, pendingTasks, currentTasks, completedTasks}) => 
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            mt: 5
+            mt: 5,  
+            width: "100%"
         }}
     >
         <Box
@@ -41,8 +42,11 @@ const Dashboard =({ totalTasks, pendingTasks, currentTasks, completedTasks}) => 
                 display: "flex",
                 flexWrap: "wrap",
                 justifyContent: "center",
+                alignItems: "center",
                 gap: 4,
-                maxWidth: "900px"
+                maxWidth: "800px",
+                width: "100%",
+                mx: "auto"
             }}
         >
             {
@@ -67,14 +71,17 @@ const Dashboard =({ totalTasks, pendingTasks, currentTasks, completedTasks}) => 
         </Box>
         <Box
             sx={{
-                mt:6
+                mt:6,
+                display: "flex",
+                justifyContent: "center",
+
             }}
         >
             <CustomButton
                 text="Visualizar Tarefas"
                 onClick={() => navigate("/tasks")}
                 sx={{
-                    width: 300,
+                    width: 200,
                     height: 50
                 }}
             >

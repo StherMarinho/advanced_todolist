@@ -8,9 +8,17 @@ const DashboardCard = ({ title, value, children }) => {
             elevation={4}
             sx={{
                 width: "100%",
-                maxWidth: "300px",
-                height: 180,
-                p: 2,
+                maxWidth: {
+                    xs: "100%",
+                    sm: "340px"
+                },
+                minHeight: "180px",
+                height: "auto",
+                p: { 
+                    xs: 1, 
+                    sm: 2, 
+                    md: 2 
+                },
                 borderRadius: 3,
                 bgcolor:"#f8fafc",
                 display: "flex",
@@ -23,8 +31,10 @@ const DashboardCard = ({ title, value, children }) => {
                 title &&
                 <Typography
                     variant="h6"
-                    fontWeight="bold"
-                    textAlign="center"
+                    sx={{
+                        //fontWeight: "bold",
+                        textAlign: "center",
+                    }}
                 >
                     {title}
                 </Typography>
@@ -33,8 +43,11 @@ const DashboardCard = ({ title, value, children }) => {
                 value !== undefined &&
                 <Typography
                     variant="h2"
-                    fontWeight="bold"
-                    textAlign="center"
+                    sx={{
+                        //fontWeight: "bold",
+                        textAlign: "center",
+                        //color: "#1976d2"
+                    }}
                 >
                     {value}
                 </Typography>

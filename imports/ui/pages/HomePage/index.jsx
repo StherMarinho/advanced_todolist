@@ -7,42 +7,43 @@ import { Box, Typography } from "@mui/material";
 import { TasksCollection } from "../../../api/tasks/TasksCollection";
 
 import Dashboard from "../../components/Dashbord";
+import { TASKS_STATUS } from "../../../constants/tasksStatus";
 
 const HomePage = () => {
 
-    const navigate = useNavigate();
-
     const user = useTracker(() => Meteor.user());
 
+    const subscription = useTracker(() => {
+        return Meteor.subscribe("tasksSummary");
+    });
+
     const tasks = useTracker(() => {
-
-        Meteor.subscribe("tasks",true,"",1);
-
-        return TasksCollection.find({
-            userId: user?._id
+        if (!subscription.ready()) return [];
+        
+        return TasksCollection.find({}, {
+            sort: { createdAt: -1 }
         }).fetch();
-
     });
 
     const totalTasks = tasks.length;
 
     const pendingTasks = tasks.filter(
-        (task) => task.status === "Cadastrada"
+        (task) => task.status === TASKS_STATUS.CREATED
     ).length;
 
     const currentTasks = tasks.filter(
-        (task) => task.status === "Em Andamento"
+        (task) => task.status === TASKS_STATUS.IN_PROGRESS
     ).length;
 
     const completedTasks = tasks.filter(
-        (task) => task.status === "Concluída"
+        (task) => task.status === TASKS_STATUS.COMPLETED
     ).length;
 
     return (
 
         <Box
             sx={{
-                p: 2,
+                p: { xs: 1, sm: 2, md: 2 },
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center"
@@ -50,12 +51,19 @@ const HomePage = () => {
         >
 
             <Typography
-                variant="h4"
-                textAlign="center"
                 fontWeight="bold"
+                sx={{
+                    width:"100%",
+                    textAlign: "center",
+                    fontSize: {
+                        xs: "24px",
+                        sm: "28px",
+                        md: "40px"
+                    }
+                }}
             >
                 Olá {user?.profile?.name},
-                seja bem-vindo ao To Do List
+                seja bem-vindo(a) ao To Do List
             </Typography>
 
             <Dashboard

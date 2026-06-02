@@ -6,11 +6,12 @@ import { Meteor } from "meteor/meteor";
 
 import CustomButton from "../CustomButton/index";
 import CustomTextField from "../CustomTextField/index";
+import { TASKS_STATUS } from "../../../constants/tasksStatus";
 
 const TaskForm = ({ task, onCancel, onSuccess }) => {
     const [name, setName] = useState(task ? task.name : "");
     const [description, setDescription] = useState(task ? task.description : "");
-    const [status, setStatus] = useState(task ? task.status : "Cadastrada");
+    const [status, setStatus] = useState(task ? task.status : TASKS_STATUS.CREATED);
     const [isPrivate, setIsPrivate] = useState(task ? task.isPrivate : false);
 
     function handleSubmit(evento) {
@@ -75,9 +76,9 @@ const TaskForm = ({ task, onCancel, onSuccess }) => {
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
                 >
-                    <MenuItem value="Cadastrada">Cadastrada</MenuItem>
-                    <MenuItem value="Em Andamento">Em Andamento</MenuItem>
-                    <MenuItem value="Concluída">Concluída</MenuItem>
+                    <MenuItem value={TASKS_STATUS.CREATED}>Cadastrada</MenuItem>
+                    <MenuItem value={TASKS_STATUS.IN_PROGRESS}>Em Andamento</MenuItem>
+                    <MenuItem value={TASKS_STATUS.COMPLETED}>Concluída</MenuItem>
                 </CustomTextField>
             </Box>
             <FormControlLabel

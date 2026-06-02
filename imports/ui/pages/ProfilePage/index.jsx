@@ -71,7 +71,7 @@ const ProfilePage = () => {
     return (
         <Box
         sx={{
-            minHeight: "100vh",
+            minHeight: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -84,17 +84,24 @@ const ProfilePage = () => {
             sx={{
                 width: "100%",
                 maxWidth: 600,
-                p: 5,
+                p: {
+                    xs: 2,
+                    sm: 3,
+                    md: 4
+                },
                 borderRadius: 4,
                 backgroundColor: "#f8fafc",
             }}
         >
-            <Typography
-                variant="h4"
-                textAlign="center"
-                fontWeight="bold"
-                color="black"
-                mb={4}
+            <Typography      
+                sx={{
+                    fontSize: {
+                        xs: "28px",
+                        md: "40px"
+                    },
+                    textAlign: "center",
+                    mb: 4,
+                }}
             >
                 Meu Perfil
             </Typography>
@@ -119,8 +126,14 @@ const ProfilePage = () => {
                     <Avatar
                         src={photo}
                         sx={{
-                            width: 120,
-                            height: 120,
+                            width: {
+                                xs: 90,
+                                md: 120
+                            },
+                            height: {
+                                xs: 90,
+                                md: 120
+                            },
                             mb: 3,
                             bgcolor: "#334155"
                         }}
@@ -191,12 +204,22 @@ const ProfilePage = () => {
                     onChange={(e) => setEmpresa(e.target.value)}
                 />
 
-                <Box>
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        mt: 2
+                    }}
+                >
                     <CustomButton    
                         text="Salvar Alterações"
                         type="submit"
                         sx={{
-                            mt: 2
+                            width: {
+                                xs: "100%",
+                                md: 200
+                            },
+                            height: 50
                         }}
                     >
                     </CustomButton>

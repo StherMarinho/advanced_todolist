@@ -1,20 +1,31 @@
 //uma tarefa, renderiza: nome, usuário, botoes
-import { ListItem, ListItemText, IconButton, Paper, ListItemIcon } from "@mui/material";
+import { ListItem, ListItemText, IconButton, Paper, ListItemIcon, Tooltip, Box } from "@mui/material";
 import Delete from "@mui/icons-material/Delete";
 import Edit from "@mui/icons-material/Edit";
 import Assignment from "@mui/icons-material/Assignment";
 
 import { useNavigate } from "react-router-dom";
+import { useTracker } from "meteor/react-meteor-data";
 
 import { Meteor } from "meteor/meteor";
+
+import { TASKS_STATUS } from "../../../constants/tasksStatus";
 
 const TaskItem = ({ task }) => {
     const navigate = useNavigate();
     const isOwner = task.userId === Meteor.userId();
 
-    
+    const user = useTracker(() => 
+        Meteor.users.findOne(task.userId)
+    );
 
     function handleDelete() {
+        const confirm = window.confirm("Tem certeza que deseja excluir esta tarefa?");
+
+        if (!confirm){
+            return;
+        } 
+            
         Meteor.call("tasks.remove", { _taskId: task._id });
     }
     return (
@@ -22,18 +33,31 @@ const TaskItem = ({ task }) => {
             <ListItem
                 secondaryAction={
                 isOwner && (
-                <>
-                    <IconButton 
-                        onClick={() => navigate(`/tasks/${task._id}`)}
-                    >
-                        <Edit />
-                    </IconButton>
-                    <IconButton 
-                        onClick={handleDelete}
-                    >
-                        <Delete />
-                    </IconButton>
-                </>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: {
+                            xs: "column",
+                            sm: "row"
+                        }
+                    }}
+                >
+                    <Tooltip title="Editar" placement="top" arrow>
+                        <IconButton 
+                            onClick={() => navigate(`/tasks/${task._id}`)}
+                        >
+                            <Edit />
+                        </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Excluir" placement="top" arrow>
+                        <IconButton 
+                            onClick={handleDelete}
+                        >
+                            <Delete />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
                 )
                 }
             >
@@ -41,9 +65,9 @@ const TaskItem = ({ task }) => {
                     <Assignment
                         sx={{
                             color:
-                                task.status === "Concluída"
+                                task.status === TASKS_STATUS.COMPLETED
                                     ? "green"
-                                    : task.status === "Em Andamento"
+                                    : task.status === TASKS_STATUS.IN_PROGRESS
                                     ? "#fbc02d"
                                     : "#9e9e9e"
                         }}
@@ -55,9 +79,15 @@ const TaskItem = ({ task }) => {
                     primary={task.name} 
                     secondary={
                         <>
-                            Criada por: {task.createdBy}
+                            Criada por: {user?.profile?.name || "Usuário"}
                             <br />
                             Status: {task.status}
+                            <br /> 
+                            Tipo: {
+                                task.isPrivate 
+                                    ? "Privada" 
+                                    : "Pública"
+                            }
                         </>
                     }
                 />

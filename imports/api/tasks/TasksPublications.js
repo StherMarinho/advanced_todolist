@@ -1,6 +1,7 @@
 //responsabilidade: controlar quais dados o front pode receber
 import { Meteor } from 'meteor/meteor';
 import { TasksCollection } from './TasksCollection';
+import { TASKS_STATUS } from '../../constants/tasksStatus';
 
 Meteor.publish("tasks", function(showCompletedTasks, searchText, page) { //porque mudar de () => para function()? Porque precisamos acessar o this.userId dentro da função de publicação, e isso só é possível com uma função tradicional, não com uma arrow function.
     const userId = this.userId;
@@ -11,7 +12,7 @@ Meteor.publish("tasks", function(showCompletedTasks, searchText, page) { //porqu
 
     const statusFilter = showCompletedTasks ? {} : {
         status:{
-            $in: ["Cadastrada", "Em Andamento"]
+            $in: [TASKS_STATUS.CREATED, TASKS_STATUS.IN_PROGRESS]
         }
     };
 
@@ -24,7 +25,8 @@ Meteor.publish("tasks", function(showCompletedTasks, searchText, page) { //porqu
 
     const limit = 4;
 
-    const skip = (page - 1) * limit;
+    const safePage = page && page > 0 ? page : 1;
+    const skip = (safePage - 1) * limit;
 
     return TasksCollection.find({
         $and:[ 
@@ -47,4 +49,29 @@ Meteor.publish("tasks", function(showCompletedTasks, searchText, page) { //porqu
         limit: limit
     }
     ); //retorna as tarefas que são públicas ou que pertencem ao usuário autenticado, e que também atendem aos filtros de status e nome, aplicando a paginação com skip e limit.
+});
+Meteor.publish("taskById", function (taskId) {
+    const userId = this.userId;
+
+    if (!userId) return this.ready();
+
+    return TasksCollection.find({
+        _id: taskId,
+        $or: [
+            { isPrivate: false },
+            { userId }
+        ]
+    });
+});
+Meteor.publish("tasksSummary", function () {
+    const userId = this.userId;
+
+    if (!userId) return this.ready();
+
+    return TasksCollection.find({
+        $or: [
+            { isPrivate: false },
+            { userId }
+        ]
+    });
 });

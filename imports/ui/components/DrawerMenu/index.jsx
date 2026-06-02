@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import { useTracker } from "meteor/react-meteor-data";
 
-import { Drawer, List, ListItem, ListItemButton, ListItemText, ListItemIcon, IconButton, Toolbar, Typography, Box, Divider, Avatar } from "@mui/material";
+import { Drawer, List, ListItem, ListItemButton, ListItemText, ListItemIcon, IconButton, Toolbar, Typography, Box, Divider, Avatar, Tooltip } from "@mui/material";
 
 import { Menu as MenuIcon, Home, Task, Person, Logout } from "@mui/icons-material";
 
@@ -17,29 +17,45 @@ const DrawerMenu = ({ open, setOpen }) => {
     const navigate = useNavigate();
 
     const menuItems = [
-        {
-            text: "Home",
-            icon: <Home />,
-            path: "/home"
-        },
-        {
-            text: "Tarefas",
-            icon: <Task />,
-            path: "/tasks"
-        },
-        {
-            text: "Perfil",
-            icon: <Person />,
-            path: "/profile"
-        },
-        {
-            text: "Logout",
-            icon: <Logout />,
-            action: () => Meteor.logout(() => {
-                navigate("/login");
-            })
-        }
-    ];
+    {
+        text: "Home",
+        icon: (open) => (
+            <Tooltip title={!open ? "Home" : ""} placement="right" arrow>
+                <Home />
+            </Tooltip>
+        ),
+        path: "/home"
+    },
+    {
+        text: "Tarefas",
+        icon: (open) => (
+            <Tooltip title={!open ? "Tarefas" : ""} placement="right" arrow>
+                <Task />
+            </Tooltip>
+        ),
+        path: "/tasks"
+    },
+    {
+        text: "Perfil",
+        icon: (open) => (
+            <Tooltip title={!open ? "Perfil" : ""} placement="right" arrow>
+                <Person />
+            </Tooltip>
+        ),
+        path: "/profile"
+    },
+    {
+        text: "Logout",
+        icon: (open) => (
+            <Tooltip title={!open ? "Logout" : ""} placement="right" arrow>
+                <Logout />
+            </Tooltip>
+        ),
+        action: () => Meteor.logout(() => {
+            navigate("/login");
+        })
+    }
+];
 
     return (
         <Drawer
@@ -62,17 +78,19 @@ const DrawerMenu = ({ open, setOpen }) => {
                     justifyContent: open ? "flex-end" : "center"
                 }}
             >
-                <IconButton
-                    onClick={() => setOpen(!open)}
-                    disableRipple
-                    sx={{
-                        "&:hover": {
-                            backgroundColor: "#f8fafc"
-                        }
-                    }}
-                >
-                    <MenuIcon />
-                </IconButton>
+                <Tooltip title={open ? "Fechar Menu" : "Abrir Menu"}>
+                    <IconButton
+                        onClick={() => setOpen(!open)}
+                        disableRipple
+                        sx={{
+                            "&:hover": {
+                                backgroundColor: "#f8fafc"
+                            }
+                        }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                </Tooltip>
             </Toolbar>
 
             <Divider />
@@ -101,7 +119,10 @@ const DrawerMenu = ({ open, setOpen }) => {
                             <Typography
                                 variant="subtitle1"
                                 fontWeight="bold"
-                                textAlign="center"
+                                
+                                sx={{
+                                    textAlign: "center"
+                                }}
                             >
                                 {user?.profile?.name || "Usuário"}
                             </Typography>
@@ -109,9 +130,8 @@ const DrawerMenu = ({ open, setOpen }) => {
                             <Typography
                                 variant="body2"
                                 color="text.secondary"
-                                textAlign="center"
                                 sx={{
-                                    wordBreak: "break-word"
+                                    textAlign: "center"
                                 }}
                             >
                                 {user?.emails?.[0]?.address || ""}
@@ -148,7 +168,7 @@ const DrawerMenu = ({ open, setOpen }) => {
                                         justifyContent: "center"
                                     }}
                                 >
-                                    {item.icon}
+                                    {item.icon(open)}
                                 </ListItemIcon>
 
                                 {

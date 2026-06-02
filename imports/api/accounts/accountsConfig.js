@@ -1,4 +1,4 @@
-//configs do meteor accounts, validar user,emails, etc.
+//configs de registro e login, regras de segurança para atualização de usuário e negação de criação de conta por parte do cliente.
 import { Accounts } from "meteor/accounts-base";
 
 Accounts.config({

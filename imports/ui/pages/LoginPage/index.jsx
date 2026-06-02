@@ -40,9 +40,9 @@ const LoginPage = () => {
         <AuthLayout>
             <FormCard>
                 <Box
-                    textAlign="center"
                     sx={{
-                        mb: 3
+                        mb: 3,
+                        textAlign: "center"
                     }}
                 >
                     <Typography
@@ -108,10 +108,12 @@ const LoginPage = () => {
                     }}
                 >
                     <Typography
-                        textAlign="center"
                         mt={3}
                         color="text.secondary"
                         variant="body2"
+                        sx={{
+                            textAlign: "center"
+                        }}
                     >
                         Não possui conta?
 

@@ -5,13 +5,13 @@ import "../imports/api/tasks/TasksPublications";
 import "../imports/api/tasks/TasksMethods";
 
 import "../imports/api/accounts/accountsConfig";
-import "../imports/api/accounts/accountsHooks";
+import "../imports/api/accounts/accountsEvents";
 import "../imports/api/accounts/usersPublications";
 import "../imports/api/accounts/usersMethods";
 
 import { TasksCollection } from "../imports/api/tasks/TasksCollection";
 
-const SEED_USERNAME = "meteorite";
+/*const SEED_USERNAME = "meteorite";
 const SEED_PASSWORD = "password";
 
 Meteor.startup(async () => {
@@ -53,4 +53,4 @@ Meteor.startup(async () => {
 
     }
 
-});
+});*/

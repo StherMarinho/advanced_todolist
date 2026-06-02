@@ -8,6 +8,7 @@ const CustomTextField = ({
     placeholder = "",
     error = "",
     select = false,
+    required = false,
     children,
     ...props
 }) => {
@@ -23,6 +24,7 @@ const CustomTextField = ({
             error={!!error}
             helperText={error}
             select={select}
+            required={required}
             margin="normal"
             {...props}
         >

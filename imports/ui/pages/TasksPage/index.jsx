@@ -27,14 +27,21 @@ const TasksPage = () => {
         return currentPage.get();
     });
 
-    const tasks = useTracker(() => {
-    const subscription = Meteor.subscribe("tasks",showCompleted,searchText,page);
+    const subscription = useTracker(() => {
+    return Meteor.subscribe("tasks", showCompleted, searchText, page);
+}, [showCompleted, searchText, page]);
 
-    if (!subscription.ready()) {
-        return [];
-    }
-        return TasksCollection.find().fetch();
-    });
+useTracker(() => {
+    Meteor.subscribe("tasksUsers");
+});
+
+const isLoading = !subscription.ready();
+
+    const tasks = useTracker(() => {
+        return TasksCollection.find({}, {
+            sort: { createdAt: -1 }
+        }).fetch();
+    }, [showCompleted, searchText, page]);
 
     return (
         <Box>
@@ -48,8 +55,14 @@ const TasksPage = () => {
             >
                 <Typography 
                     variant="h4"
-                    textAlign="center"
                     fontWeight="bold"
+                    sx={{
+                        textAlign: "center",
+                        fontSize: {
+                            xs: "24px",
+                            md: "40px"
+                        }
+                    }}
                 >
                     Lista de Tarefas
                 </Typography>
@@ -58,6 +71,7 @@ const TasksPage = () => {
 
             <Box 
                 sx={{
+                    width:"100%",
                     maxWidth: "1000px",
                     mx: "auto",
                     mt:2,
@@ -116,7 +130,10 @@ const TasksPage = () => {
                 }}
             >
                 <Stack
-                    direction="row"
+                    direction={{ 
+                        xs: "column", 
+                        sm: "row" 
+                    }}
                     spacing={2}
                     sx={{
                         alignItems:"center"
@@ -151,7 +168,7 @@ const TasksPage = () => {
                     <CustomButton
                         text="Próxima"
                         fullWidth={false}
-                        disabled={tasks.length === 0}
+                        disabled={tasks.length < 4}
                         onClick={() => {
                             currentPage.set(page + 1)
                         }}
@@ -177,7 +194,11 @@ const TasksPage = () => {
                     onClick={() => navigate("/tasks/new")}
                     fullWidth={false}
                     sx={{
-                        width: 300
+                        width: {
+                            xs: "100%", 
+                            sm: 250 
+                        },
+                        height: 50
                     }}
                 />
             </Box>
