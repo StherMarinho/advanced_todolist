@@ -15,7 +15,6 @@ Aplicação de gerenciamento de tarefas desenvolvida com Meteor, React e Materia
 - Filtro para exibição de tarefas concluídas
 - Paginação com limite de 4 tarefas por página
 - Controle de acesso utilizando publicações do Meteor
-- Interface responsiva para desktop e dispositivos móveis
 
 ## Tecnologias Utilizadas
 
