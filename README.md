@@ -4,7 +4,7 @@ Aplicação de gerenciamento de tarefas desenvolvida com Meteor, React e Materia
 
 ## Funcionalidades
 
-- Cadastro e autenticação de usuários
+- Cadastro e login de usuários
 - Dashboard com métricas das tarefas
 - Criação, edição e exclusão de tarefas
 - Controle de status (Cadastrada, Em Andamento e Concluída)
