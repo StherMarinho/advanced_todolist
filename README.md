@@ -1,6 +1,6 @@
-# To Do List - Meteor + React
+# Advanced To Do List
 
-Aplicação de gerenciamento de tarefas desenvolvida com Meteor, React e Material UI. O sistema permite cadastro de usuários, gerenciamento de tarefas públicas e privadas, dashboard de acompanhamento e edição de perfil.
+Aplicação de gerenciamento de tarefas que permite: cadastro de usuários, gerenciamento de tarefas públicas e privadas, dashboard de acompanhamento e edição de perfil.
 
 ## Funcionalidades
 
@@ -19,6 +19,7 @@ Aplicação de gerenciamento de tarefas desenvolvida com Meteor, React e Materia
 ## Tecnologias Utilizadas
 
 - Meteor
+- JavaScript
 - React
 - Material UI (MUI)
 - MongoDB
@@ -37,9 +38,6 @@ Visualização, edição e alteração do status da tarefa.
 ### Perfil
 Gerenciamento dos dados do usuário.
 
-### Publicações Meteor
-Controle de visibilidade e segurança dos dados.
-
 ## Regras de Negócio
 
 - Apenas usuários cadastrados podem acessar o sistema.
@@ -49,9 +47,13 @@ Controle de visibilidade e segurança dos dados.
 - Filtros, pesquisa e paginação são processados no servidor através das publicações do Meteor.
 
 ## Como Executar
-
+Caso não tenha o Meteor insatalado:
 ```bash
 meteor npm install
+meteor run ou meteor
+```
+Se já tiver o Meteor:
+```bash
 meteor run ou meteor
 ```
 
