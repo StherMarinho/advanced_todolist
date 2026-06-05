@@ -16,12 +16,7 @@ const TaskForm = ({ task, onCancel, onSuccess }) => {
 
     function handleSubmit(evento) {
         evento.preventDefault();
-        console.log({
-            name,
-            description,
-            status,
-            isPrivate
-        });
+        //console.log({name, description,status,isPrivate});
         if (task) {
             Meteor.call("tasks.update", { _taskId: task._id, name, description, status, isPrivate },
                 () => {
@@ -29,16 +24,14 @@ const TaskForm = ({ task, onCancel, onSuccess }) => {
                 }
             );
         } else {
-            Meteor.call(
-                "tasks.insert",
-                { name, description, status, isPrivate },
+            Meteor.call("tasks.insert",{ name, description, status, isPrivate },
                 (error, result) => {
                     if (error) {
-                        console.log(error);
+                        //console.log(error);
                         return;
                     }
 
-                    console.log("Tarefa criada:", result);
+                    //console.log("Tarefa criada:", result);
 
                     onSuccess();
                 }

@@ -22,26 +22,24 @@ const TaskDetailsPage = () => {
     const isNewTask = !id;
     const [isEditing, setIsEditing] = useState(false);
 
-    const subscription = useTracker(() => {
-        return Meteor.subscribe("taskById", id);
-    }, [id]);
+    const { task, user, isLoading } = useTracker( () => {
+        const subscription = Meteor.subscribe("taskById", id);
 
-    const isLoading = !subscription.ready();
+        const task = TasksCollection.findOne(id);
 
-    const task = useTracker(() => {
-        return TasksCollection.findOne(id);
-    }, [id]);
+        const user = task ? Meteor.users.findOne(task.userId) : null;
 
-    const user = useTracker(() => {
-        return Meteor.users.findOne(task?.userId);
-    }, [task?.userId]);
+        return {
+            task,
+            user,
+            isLoading: !subscription.ready()
+        };
+    },[id]);
     
     const isOwner = task?.userId === Meteor.userId(); //"?." é o operador de encadeamento opcional, que permite acessar a propriedade userId de task sem causar um erro se task for null ou undefined. 
 
 
     function handleStatusChange(status) {
-
-
         Meteor.call(
             "tasks.changeStatus",
             {
@@ -60,17 +58,24 @@ const TaskDetailsPage = () => {
     if (isNewTask) {
         return (
             <Paper 
-                sx={{ 
-                    p: {
+                sx={{
+                    p:{
                         xs: 2,
                         md: 4
-                    }
+                    },
+                    maxWidth: 800,
+                    mx:"auto"
                 }}
             >
 
                 <Typography
-                    variant="h4"
                     mb={3}
+                    sx={{
+                        fontSize: {
+                            xs: "24px",
+                            md: "40px"
+                        }
+                    }}
                 >
                     Nova Tarefa
                 </Typography>
@@ -79,7 +84,6 @@ const TaskDetailsPage = () => {
                     onCancel={() => navigate("/tasks")}
                     onSuccess={() => navigate("/tasks")}
                 />
-
             </Paper>
         );
     }
@@ -94,7 +98,12 @@ const TaskDetailsPage = () => {
     return (
         <Paper 
             sx={{
-                p: 4 
+                p:{
+                    xs: 2,
+                    md: 4
+                },
+                maxWidth: 800,
+                mx:"auto"
             }}
         >
             <Box

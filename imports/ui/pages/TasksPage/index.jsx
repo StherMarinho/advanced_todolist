@@ -31,17 +31,26 @@ const TasksPage = () => {
     return Meteor.subscribe("tasks", showCompleted, searchText, page);
 }, [showCompleted, searchText, page]);
 
-useTracker(() => {
-    Meteor.subscribe("tasksUsers");
-});
+const usersSubscription = useTracker(() => {
+    return Meteor.subscribe("tasksUsers");
+}, []);
 
 const isLoading = !subscription.ready();
 
-    const tasks = useTracker(() => {
-        return TasksCollection.find({}, {
-            sort: { createdAt: -1 }
-        }).fetch();
-    }, [showCompleted, searchText, page]);
+const tasks = useTracker(() => {
+    return TasksCollection.find({}, {
+        sort: { createdAt: -1 }
+    }).fetch();
+}, [showCompleted, searchText, page]);
+
+const users = useTracker(() => {
+    return Meteor.users.find().fetch();
+},[]);
+
+const usersMap = {};
+users.forEach((user)=>{
+    usersMap[user._id] = user;
+})
 
     return (
         <Box>
@@ -118,7 +127,10 @@ const isLoading = !subscription.ready();
                     mb:2
                 }}
             >
-                <TaskList tasks={tasks} />
+                <TaskList 
+                    tasks={tasks} 
+                    usersMap={usersMap}
+                />
             </Box>
 
             <Box

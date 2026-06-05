@@ -5,19 +5,19 @@ import Edit from "@mui/icons-material/Edit";
 import Assignment from "@mui/icons-material/Assignment";
 
 import { useNavigate } from "react-router-dom";
-import { useTracker } from "meteor/react-meteor-data";
+//import { useTracker } from "meteor/react-meteor-data";
 
 import { Meteor } from "meteor/meteor";
 
 import { TASKS_STATUS } from "../../../constants/tasksStatus";
 
-const TaskItem = ({ task }) => {
+const TaskItem = ({ task, user }) => {
     const navigate = useNavigate();
     const isOwner = task.userId === Meteor.userId();
 
-    const user = useTracker(() => 
+    /*const user = useTracker(() => 
         Meteor.users.findOne(task.userId)
-    );
+    );*/
 
     function handleDelete() {
         const confirm = window.confirm("Tem certeza que deseja excluir esta tarefa?");

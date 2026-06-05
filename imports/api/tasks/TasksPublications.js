@@ -7,12 +7,12 @@ Meteor.publish("tasks", function(showCompletedTasks, searchText, page) { //porqu
     const userId = this.userId;
 
     if (!userId) {
-        return this.ready(); //o que é "this.ready()"? Ele é usado para indicar que a publicação está pronta e não há mais dados a serem enviados para o cliente. Isso é útil quando você tem uma condição que impede a publicação de dados, como no caso de um usuário não autenticado. Ao chamar this.ready(), você informa ao cliente que a publicação terminou e que ele pode parar de esperar por dados.
+        return this.ready(); //"this.ready()": é usado para indicar que a publicação está pronta e não há mais dados a serem enviados para o cliente. Isso é útil quando você tem uma condição que impede a publicação de dados, como no caso de um usuário não autenticado. Ao chamar this.ready(), você informa ao cliente que a publicação terminou e que ele pode parar de esperar por dados.
     }
 
     const statusFilter = showCompletedTasks ? {} : {
         status:{
-            $in: [TASKS_STATUS.CREATED, TASKS_STATUS.IN_PROGRESS]
+            $in: [TASKS_STATUS.CREATED, TASKS_STATUS.IN_PROGRESS] // "$in" é um operador de query que verifica se o valor de um campo corresponde a qualquer valor dentro de uma lista ou array especificada
         }
     };
 
@@ -24,16 +24,14 @@ Meteor.publish("tasks", function(showCompletedTasks, searchText, page) { //porqu
     } : {};
 
     const limit = 4;
-
     const safePage = page && page > 0 ? page : 1;
     const skip = (safePage - 1) * limit;
 
     return TasksCollection.find({
-        $and:[ 
+        $and:[  //$and, precisa satisfazer todas condições ("and")
             {
-                $or: [ //$or é um operador lógico do MongoDB que permite combinar várias condições. Ele retorna os documentos que satisfazem pelo menos uma das condições especificadas. No contexto,o $or é usadopara garantir que o usuário veja tanto as tarefas públicas quanto as suas próprias tarefas privadas.
+                $or: [ //$or é um operador lógico do MongoDB que permite combinar várias condições. Ele retorna os documentos que satisfazem pelo menos uma das condições especificadas. No contexto,o $or é usado para garantir que o usuário veja tanto as tarefas públicas quanto as suas próprias tarefas privadas.
                     { isPrivate: false },
-                    //{isPrivate: { $exists: false } }, //caso a tarefa não tenha o campo isPrivate, ela será considerada pública e estará disponível para todos os usuários.
                     { userId: userId }
                 ]
             },
@@ -63,7 +61,7 @@ Meteor.publish("taskById", function (taskId) {
         ]
     });
 });
-Meteor.publish("tasksSummary", function (dashboardFilter) {
+Meteor.publish("dashboardTasks", function (dashboardFilter) {
     const userId = this.userId;
 
     if (!userId) {

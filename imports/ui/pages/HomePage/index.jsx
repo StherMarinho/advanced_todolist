@@ -20,7 +20,7 @@ const HomePage = () => {
     });
 
     const subscription = useTracker(() => {
-        return Meteor.subscribe("tasksSummary", filter);
+        return Meteor.subscribe("dashboardTasks", filter);
     });
 
     const tasks = useTracker(() => {

@@ -1,13 +1,17 @@
-//receber tarefas e renderizar gerando varios TaskItem (só percorre array e monta TaskItem para cada tarefa)
+//receber tarefas e renderizar gerando varios TaskItem 
 import {List} from "@mui/material";
 import TaskItem from "../TaskItem/index";
 
-const TaskList = ({ tasks }) => {
+const TaskList = ({ tasks, usersMap }) => {
     return (
         <List>
             {
                 tasks.map((task) => (
-                    <TaskItem key={task._id} task={task} />
+                    <TaskItem 
+                        key={task._id} 
+                        task={task}
+                        user={usersMap[task.userId]}
+                    />
                 ))
             }
         </List>

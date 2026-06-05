@@ -17,8 +17,7 @@ body {
   font-size: 14px;
 }
 
-html, body
-#react-target {
+html, body, #react-target {
   min-height: 100%;
   width: 100%;
   overflow-x: hidden;

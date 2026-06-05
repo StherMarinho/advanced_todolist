@@ -10,10 +10,14 @@ Meteor.publish("usersData", function () {
         { _id: this.userId }, // Filtra para retornar apenas os dados do usuário autenticado.
         {
             fields: {
-                "profile.name": 1, // Publica o campo de nome do perfil do usuário.
-                "emails": 1, // Publica o campo de emails do usuário.
-                "createdAt": 1, // Publica a data de criação do usuário.
-                "tasksStats": 1, // Publica as estatísticas de tarefas do usuário.
+                "profile.name": 1, // Publica o campo de nome do perfil do usuário e demais campos
+                "profile.birthDate": 1,
+                "profile.genero": 1,
+                "profile.empresa": 1,
+                "profile.photo": 1,
+                emails: 1, 
+                "createdAt": 1,
+                //"tasksStats": 1, // Publica as estatísticas de tarefas do usuário.
             },
         }
     );
@@ -21,7 +25,7 @@ Meteor.publish("usersData", function () {
 
 Meteor.publish("tasksUsers", function () {
     if (!this.userId) {
-        return this.ready(); // Se o usuário não estiver autenticado, a publicação é finalizada imediatamente.
+        return this.ready(); 
     }
 
     return Meteor.users.find(
