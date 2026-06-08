@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useTracker } from "meteor/react-meteor-data";
-import { Meteor } from "meteor/meteor";
+import { changeTaskStatus } from "../../services/taskService";
 
 import { Box, Typography, Paper, Stack } from "@mui/material";
 import ArrowBack from "@mui/icons-material/ArrowBack";
@@ -40,15 +40,15 @@ const TaskDetailsPage = () => {
 
 
     function handleStatusChange(status) {
-        Meteor.call(
-            "tasks.changeStatus",
-            {
-                _taskId: task._id,
-                status
-            },
+        changeTaskStatus(
+            task._id,
+            status,
             (error) => {
                 if (error) {
-                    alert("Erro ao atualizar status: " + error.message || error.reason);
+                    alert(
+                        "Erro ao atualizar status: " +
+                        (error.reason || error.message)
+                    );
                 }
             }
         );

@@ -1,5 +1,5 @@
 import { Meteor } from "meteor/meteor";
-import { useTracker } from "meteor/react-meteor-data";
+import { useSubscribe, useTracker, useFind } from "meteor/react-meteor-data";
 
 import { Box, Typography, MenuItem } from "@mui/material";
 
@@ -19,17 +19,14 @@ const HomePage = () => {
         return dashboardFilter.get();
     });
 
-    const subscription = useTracker(() => {
-        return Meteor.subscribe("dashboardTasks", filter);
-    });
+    const isLoading = useSubscribe("dashboardTasks", filter)();
 
-    const tasks = useTracker(() => {
-        if (!subscription.ready()) return [];
-        
-        return TasksCollection.find({}, {
+    const tasks = useFind(
+        () => TasksCollection.find({}, {
             sort: { createdAt: -1 }
-        }).fetch();
-    });
+        }),
+        [filter]
+    );
 
     const totalTasks = tasks.length;
 

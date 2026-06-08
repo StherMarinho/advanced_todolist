@@ -109,5 +109,45 @@ Meteor.methods({ //Os métodos são essencialmente chamadas RPC ao servidor que 
                 status 
             },
         });
+    },
+    "tasks.count": async function(showCompletedTasks, searchText) {
+        if (!this.userId) {
+            throw new Meteor.Error("Não autorizado.");
+        }
+
+        const statusFilter = showCompletedTasks
+            ? {}
+            : {
+                status: {
+                    $in: [
+                        TASKS_STATUS.CREATED,
+                        TASKS_STATUS.IN_PROGRESS
+                    ]
+                }
+            };
+
+        const nameTaskFilter = searchText
+            ? {
+                name: {
+                    $regex: searchText,
+                    $options: "i"
+                }
+            }
+            : {};
+
+        const selector = {
+            $and: [
+                {
+                    $or: [
+                        { isPrivate: false },
+                        { userId: this.userId }
+                    ]
+                },
+                statusFilter,
+                nameTaskFilter
+            ]
+        };
+
+        return await TasksCollection.find(selector).countAsync();
     }
 });

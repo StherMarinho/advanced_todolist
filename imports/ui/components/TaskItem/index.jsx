@@ -7,7 +7,7 @@ import Assignment from "@mui/icons-material/Assignment";
 import { useNavigate } from "react-router-dom";
 //import { useTracker } from "meteor/react-meteor-data";
 
-import { Meteor } from "meteor/meteor";
+import { removeTask } from "../../services/taskService";
 
 import { TASKS_STATUS } from "../../../constants/tasksStatus";
 
@@ -25,8 +25,8 @@ const TaskItem = ({ task, user }) => {
         if (!confirm){
             return;
         } 
-            
-        Meteor.call("tasks.remove", { _taskId: task._id });
+        
+        removeTask(task._id);
     }
     return (
         <Paper sx={{ mb: 2 }}>

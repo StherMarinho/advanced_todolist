@@ -2,8 +2,9 @@
 import { Box, Typography, Checkbox, FormControlLabel, Stack } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
-import { useTracker } from "meteor/react-meteor-data";
+import { useFind, useTracker, useSubscribe } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
+import { useState, useEffect } from "react";
 
 import { showCompletedTasks, searchTasksText, currentPage } from "../../state/taskFilter";
 import { TasksCollection } from "../../../api/tasks/TasksCollection";
@@ -27,30 +28,40 @@ const TasksPage = () => {
         return currentPage.get();
     });
 
-    const subscription = useTracker(() => {
-    return Meteor.subscribe("tasks", showCompleted, searchText, page);
-}, [showCompleted, searchText, page]);
+    const [totalTasks, setTotalTasks] = useState(0);
+    useEffect(() => {
+        Meteor.call(
+            "tasks.count",
+            showCompleted,
+            searchText,
+            (error, result) => {
+                if (!error) {
+                    setTotalTasks(result);
+                }
+            }
+        );
+    }, [showCompleted, searchText]);
+    const totalPages = Math.ceil(totalTasks / 4);
 
-const usersSubscription = useTracker(() => {
-    return Meteor.subscribe("tasksUsers");
-}, []);
+    useSubscribe("tasks", showCompleted, searchText, page)();
 
-const isLoading = !subscription.ready();
+    useSubscribe("tasksUsers")();
 
-const tasks = useTracker(() => {
-    return TasksCollection.find({}, {
+    const tasks = useFind(() => TasksCollection.find({}, {
         sort: { createdAt: -1 }
-    }).fetch();
-}, [showCompleted, searchText, page]);
+        }),
+        [showCompleted, searchText, page]
+    );
 
-const users = useTracker(() => {
-    return Meteor.users.find().fetch();
-},[]);
+    const users = useFind(
+        () => Meteor.users.find(),
+        []
+    );
 
-const usersMap = {};
-users.forEach((user)=>{
-    usersMap[user._id] = user;
-})
+    const usersMap = {};
+    users.forEach((user)=>{
+        usersMap[user._id] = user;
+    })
 
     return (
         <Box>
@@ -92,6 +103,7 @@ users.forEach((user)=>{
                     value={searchText}
                     onChange={(evento) => {
                         searchTasksText.set(evento.target.value);
+                        currentPage.set(1);
                     }}
                     placeholder="Digite o nome da tarefa"
                 >
@@ -112,6 +124,7 @@ users.forEach((user)=>{
                             checked={showCompleted}
                             onChange={(evento) => {
                                 showCompletedTasks.set(evento.target.checked);
+                                currentPage.set(1);
                             }}
                         />
                     }
@@ -180,7 +193,7 @@ users.forEach((user)=>{
                     <CustomButton
                         text="Próxima"
                         fullWidth={false}
-                        disabled={tasks.length < 4}
+                        disabled={page >= totalPages}
                         onClick={() => {
                             currentPage.set(page + 1)
                         }}

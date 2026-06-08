@@ -2,7 +2,7 @@
 import { Box, MenuItem, Checkbox, FormControlLabel, Stack } from "@mui/material";
 import { useState } from "react";
 
-import { Meteor } from "meteor/meteor";
+import { insertTask, updateTask } from "../../services/taskService";
 
 import CustomButton from "../CustomButton/index";
 import CustomTextField from "../CustomTextField/index";
@@ -18,13 +18,13 @@ const TaskForm = ({ task, onCancel, onSuccess }) => {
         evento.preventDefault();
         //console.log({name, description,status,isPrivate});
         if (task) {
-            Meteor.call("tasks.update", { _taskId: task._id, name, description, status, isPrivate },
+            updateTask({ _taskId: task._id, name, description, status, isPrivate },
                 () => {
                     onSuccess();
                 }
             );
         } else {
-            Meteor.call("tasks.insert",{ name, description, status, isPrivate },
+            insertTask({ name, description, status, isPrivate },
                 (error, result) => {
                     if (error) {
                         //console.log(error);

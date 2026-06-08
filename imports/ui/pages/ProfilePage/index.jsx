@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Meteor } from "meteor/meteor";
 import { useTracker } from "meteor/react-meteor-data";
-import { Accounts } from "meteor/accounts-base";
+import { changePassword } from "../../services/authService";
+import { updateProfile, updateEmail } from "../../services/profileService";
 
 import {Box, Paper, Typography, MenuItem, Avatar, Divider } from "@mui/material";
 
@@ -65,9 +66,9 @@ const ProfilePage = () => {
             valorAtual || user.emails?.[0]?.address || ""
         );
 
-    }, [user]);
+}, [user]);
 
-    function handlePhotoUpload(evento) {
+function handlePhotoUpload(evento) {
 
     const file = evento.target.files[0];
 
@@ -91,57 +92,57 @@ const ProfilePage = () => {
     reader.readAsDataURL(file);
 }
 
-    function alterarSenha(callbackSucesso) {
+function alterarSenha(callbackSucesso) {
 
-        if (!newPassword) {
-            callbackSucesso();
-            return;
-        }
-
-        if (!currentPassword) {
-            alert("Informe a senha atual.");
-            return;
-        }
-
-        if (newPassword !== confirmPassword) {
-            alert("As senhas não coincidem.");
-            return;
-        }
-
-        if (newPassword === currentPassword) {
-            alert("A nova senha deve ser diferente da atual.");
-            return;
-        }
-
-        if (newPassword.length < 6) {
-            alert("A nova senha deve possuir pelo menos 6 caracteres.");
-            return;
-        }
-
-        Accounts.changePassword(
-            currentPassword,
-            newPassword,
-            (erroSenha) => {
-
-                if (erroSenha) {
-                    alert(
-                        erroSenha.reason ||
-                        erroSenha.message ||
-                        "Erro ao alterar senha."
-                    );
-                    return;
-                }
-
-                setCurrentPassword("");
-                setNewPassword("");
-                setConfirmPassword("");
-
-                callbackSucesso();
-            }
-        );
+    if (!newPassword) {
+        callbackSucesso();
+        return;
     }
 
-    function handleSubmit(evento) {
+    if (!currentPassword) {
+        alert("Informe a senha atual.");
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        alert("As senhas não coincidem.");
+        return;
+    }
+
+    if (newPassword === currentPassword) {
+        alert("A nova senha deve ser diferente da atual.");
+        return;
+    }
+
+    if (newPassword.length < 6) {
+        alert("A nova senha deve possuir pelo menos 6 caracteres.");
+        return;
+    }
+
+    changePassword(
+        currentPassword,
+        newPassword,
+        (erroSenha) => {
+
+            if (erroSenha) {
+                alert(
+                    erroSenha.reason ||
+                    erroSenha.message ||
+                    "Erro ao alterar senha."
+                );
+                return;
+            }
+
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+
+            callbackSucesso();
+        }
+    );
+}
+
+function handleSubmit(evento) {
     evento.preventDefault();
 
     if (!email || !email.includes("@")) {
@@ -149,8 +150,7 @@ const ProfilePage = () => {
         return;
     }
 
-    Meteor.call(
-        "users.updateProfile",
+    updateProfile(
         {
             name,
             birthDate:
@@ -186,10 +186,11 @@ const ProfilePage = () => {
             };
 
             if (novoEmail !== emailAtual) {
-                
-                Meteor.call("users.updateEmail",{ email: novoEmail},
+
+                updateEmail(
+                    novoEmail,
                     (erroEmail) => {
-                        
+
                         if (erroEmail) {
                             console.error(
                                 "Erro email:",
@@ -206,7 +207,11 @@ const ProfilePage = () => {
                         }
 
                         alterarSenha(finalizar);
-                        console.log('Email atual:', emailAtual);
+
+                        console.log(
+                            "Email atual:",
+                            emailAtual
+                        );
                     }
                 );
 
@@ -221,7 +226,6 @@ const ProfilePage = () => {
     return (
         <Box
             sx={{
-                minHeight: "100%",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
