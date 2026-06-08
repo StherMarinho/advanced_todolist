@@ -1,4 +1,3 @@
-//Responsabilidade: Página de login, cadastro, autenticação e recuperação de senha.
 import {useState} from "react";
 import {Meteor} from "meteor/meteor";
 

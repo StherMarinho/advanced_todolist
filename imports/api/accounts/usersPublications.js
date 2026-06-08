@@ -1,4 +1,3 @@
-//função: publicar dados seguros do usuário, como nome, email, para o cliente.
 import { Meteor } from "meteor/meteor";
 
 Meteor.publish("usersData", function () {

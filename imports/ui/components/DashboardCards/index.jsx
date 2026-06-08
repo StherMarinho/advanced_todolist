@@ -1,4 +1,3 @@
-//cards de métricas
 import { Paper, Typography } from "@mui/material"
 
 const DashboardCard = ({ title, value, children }) => {

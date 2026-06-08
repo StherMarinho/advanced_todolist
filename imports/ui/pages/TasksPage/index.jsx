@@ -1,4 +1,3 @@
-//Responsabilidade: lista de tarefas, remover tarefas, atualizar tarefas, filtros; pesquisa; paginação.
 import { Box, Typography, Checkbox, FormControlLabel, Stack } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";

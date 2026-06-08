@@ -1,4 +1,4 @@
-//responsabilidade: controlar quais dados o front pode receber
+//responsabilidade: controlar quais dados o front pode receber; buscar os dados
 import { Meteor } from 'meteor/meteor';
 import { TasksCollection } from './TasksCollection';
 import { TASKS_STATUS } from '../../constants/tasksStatus';

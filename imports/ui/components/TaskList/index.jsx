@@ -1,4 +1,4 @@
-//receber tarefas e renderizar gerando varios TaskItem 
+//receber tarefas, gerando varios TaskItem 
 import {List} from "@mui/material";
 import TaskItem from "../TaskItem/index";
 

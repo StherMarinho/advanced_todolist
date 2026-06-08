@@ -1,4 +1,4 @@
-//uma tarefa, renderiza: nome, usuário, botoes
+//uma tarefa:nome, usuário, botoes
 import { ListItem, ListItemText, IconButton, Paper, ListItemIcon, Tooltip, Box } from "@mui/material";
 import Delete from "@mui/icons-material/Delete";
 import Edit from "@mui/icons-material/Edit";

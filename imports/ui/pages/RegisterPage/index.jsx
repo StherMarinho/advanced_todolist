@@ -1,4 +1,3 @@
-// cadastro
 import React, { useState } from "react";
 
 import { Accounts } from "meteor/accounts-base";
