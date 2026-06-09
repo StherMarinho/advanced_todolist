@@ -7,7 +7,6 @@ const FormCard = ({ children, sx = {} }) => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                //background: "linear-gradient(135deg, #0f172a, #1e293b)",
                 p: 2,
             }}
         >
@@ -19,7 +18,6 @@ const FormCard = ({ children, sx = {} }) => {
                     p: 5,
                     borderRadius: 4,
                     backgroundColor: "#bfc2c7",
-                    //backgroundColor: "#1e293b",
                     ...sx
                 }}
             >

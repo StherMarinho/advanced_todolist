@@ -1,4 +1,3 @@
-//função: validar o email do usuário e adicionar a data de criação do usuário no momento do cadastro, além de preservar o perfil do usuário, se fornecido.
 import { Accounts } from "meteor/accounts-base";
 import { Meteor } from "meteor/meteor";
 
@@ -17,15 +16,10 @@ Accounts.validateNewUser((user) => {
 });
 
 Accounts.onCreateUser((options, user) => {
-    user.createdAt = new Date(); // Adiciona a data de criação do usuário
-
-    /*user.tasksStats = { // serve para adicionar um “estado inicial”
-        total: 0,
-        completed: 0,
-    };*/
+    user.createdAt = new Date(); 
 
     if (options.profile) {
-        user.profile = options.profile; // Preserva o perfil do usuário, se fornecido
+        user.profile = options.profile; 
     }   
 
     return user;

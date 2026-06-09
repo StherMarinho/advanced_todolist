@@ -1,4 +1,3 @@
-//visualizar o dashboard, sem precisar de uma pagina para ele - exibe os cards, organiza o layout
 import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 

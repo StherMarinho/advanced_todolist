@@ -57,7 +57,6 @@ Meteor.methods({
         if (emailAtual?.toLowerCase() === novoEmail) {
             return true;
         }
-        //console.log("Atualizando email de:", emailAtual,"para:", novoEmail);
         await Meteor.users.updateAsync(
             {
                 _id: this.userId 

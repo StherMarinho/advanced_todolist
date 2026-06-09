@@ -1,4 +1,3 @@
-//formulário para criar ou editar uma tarefa
 import { Box, MenuItem, Checkbox, FormControlLabel, Stack } from "@mui/material";
 import { useState } from "react";
 
@@ -16,7 +15,7 @@ const TaskForm = ({ task, onCancel, onSuccess }) => {
 
     function handleSubmit(evento) {
         evento.preventDefault();
-        //console.log({name, description,status,isPrivate});
+
         if (task) {
             updateTask({ _taskId: task._id, name, description, status, isPrivate },
                 () => {
@@ -27,11 +26,8 @@ const TaskForm = ({ task, onCancel, onSuccess }) => {
             insertTask({ name, description, status, isPrivate },
                 (error, result) => {
                     if (error) {
-                        //console.log(error);
                         return;
                     }
-
-                    //console.log("Tarefa criada:", result);
 
                     onSuccess();
                 }

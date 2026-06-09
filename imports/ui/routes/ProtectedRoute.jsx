@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate } from "react-router-dom"; //biblioteca padrão para criar rotas e gerenciar a navegação em aplicações React.
+import { Navigate } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import { useTracker } from "meteor/react-meteor-data";
 

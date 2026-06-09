@@ -35,7 +35,7 @@ const TaskDetailsPage = () => {
         };
     },[id]);
     
-    const isOwner = task?.userId === Meteor.userId(); //"?." é o operador de encadeamento opcional, que permite acessar a propriedade userId de task sem causar um erro se task for null ou undefined. 
+    const isOwner = task?.userId === Meteor.userId(); 
 
 
     function handleStatusChange(status) {

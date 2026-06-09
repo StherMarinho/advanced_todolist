@@ -9,11 +9,9 @@ const validStatus = [
     TASKS_STATUS.COMPLETED
 ];
 
-Meteor.methods({ //Os métodos são essencialmente chamadas RPC ao servidor que permitem realizar operações no lado do servidor de forma segura
+Meteor.methods({
     "tasks.insert": async function({name , description, status, isPrivate}) {
-        /*console.log("user:" + Meteor.user());
-        console.log("profile:" + Meteor.user()?.profile);
-        console.log("name:" + Meteor.user()?.profile?.name);*/
+
         if (!this.userId) {
             throw new Meteor.Error('Não autorizado.');
         }
@@ -21,9 +19,6 @@ Meteor.methods({ //Os métodos são essencialmente chamadas RPC ao servidor que 
         if(!name?.trim()) {
             throw new Meteor.Error('O nome da tarefa é obrigatório.');
         }
-
-        //const user = await Meteor.users.findOneAsync(this.userId);
-        //console.log("user encontrado:",user);
 
         if (status && !validStatus.includes(status)) {
             throw new Meteor.Error("Status inválido.");
@@ -35,7 +30,6 @@ Meteor.methods({ //Os métodos são essencialmente chamadas RPC ao servidor que 
             status: status || TASKS_STATUS.CREATED,
             isPrivate,
             createdAt: new Date(),
-            //createdBy: user?.profile?.name || "Usuário",
             userId: this.userId,
         });
     },

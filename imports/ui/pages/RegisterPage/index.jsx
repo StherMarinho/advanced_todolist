@@ -151,10 +151,6 @@ const RegisterPage = () => {
                         onChange={(newValue) => setBirthDate(newValue)}
                         format="DD/MM/YYYY"
                         fullWidth
-                        /*slotProps={{ inputLabel: { shrink: true } }}
-                        InputLabelProps={{
-                            shrink: true
-                        }}*/
                     />
 
                     <CustomTextField

@@ -1,4 +1,3 @@
-//responsabilidade: envolver toda aplicação.
 import React from "react";
 
 import { RouterProvider } from "react-router-dom";

@@ -14,7 +14,7 @@ import CustomButton from "../../components/CustomButton";
 
 const ProfilePage = () => {
     
-    const user = useTracker(() => {//useTracke: monitora reativamente o estado do Meteor.user(). Se o usuário fizer login, logout ou se os dados dele mudarem no servidor, o componente React será atualizado automaticamente.
+    const user = useTracker(() => {
         Meteor.subscribe("usersData");
         
         return Meteor.user();
