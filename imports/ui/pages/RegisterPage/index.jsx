@@ -10,6 +10,7 @@ import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
 import CustomTextField from "../../components/CustomTextField/index";
 import CustomButton from "../../components/CustomButton/index";
 import FormCard from "../../components/FormCard";
+import { esES } from "@mui/x-date-pickers/locales";
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -63,7 +64,7 @@ const RegisterPage = () => {
             setLoading(false);
 
             if (erro) {
-                setErrors({ general: "Erro ao criar conta" });
+                setErrors({ general: erro.reason || "Erro ao criar conta" });
                 return;
             }
 
@@ -187,6 +188,14 @@ const RegisterPage = () => {
                             textAlign: "center"
                         }}
                     >
+                        {errors.general && (
+                            <Typography
+                                color="error"
+                                variant="body2"
+                            >
+                                {errors.general}
+                            </Typography>
+                        )}
                         <CustomButton
                             text="Cadastrar"
                             type="submit"
