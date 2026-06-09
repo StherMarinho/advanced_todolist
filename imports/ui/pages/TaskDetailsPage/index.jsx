@@ -15,7 +15,6 @@ import TaskForm from "../../components/TaskForm";
 import CustomButton from "../../components/CustomButton";
 import { TASKS_STATUS } from "../../../constants/tasksStatus";
 
-
 const TaskDetailsPage = () => {
     const navigate = useNavigate();
     const { id } = useParams();
@@ -54,7 +53,6 @@ const TaskDetailsPage = () => {
         );
     }
 
-    // nova tarefa
     if (isNewTask) {
         return (
             <Paper 
@@ -94,7 +92,7 @@ const TaskDetailsPage = () => {
             </Typography>
         );
     }
-    //editar/ver detalhes da tarefa
+
     return (
         <Paper 
             sx={{

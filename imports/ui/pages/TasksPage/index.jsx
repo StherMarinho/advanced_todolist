@@ -14,42 +14,36 @@ import CustomTextField from "../../components/CustomTextField";
 
 const TasksPage = () => {
     const navigate = useNavigate();
-    
-    const showCompleted = useTracker(() => {
-        return showCompletedTasks.get();
-    });
 
-    const searchText = useTracker(() => {
-        return searchTasksText.get();
-    });
-
-    const page = useTracker(() => {
-        return currentPage.get();
-    });
+    const filters = useTracker(() => ({
+        showCompleted: showCompletedTasks.get(),
+        searchText: searchTasksText.get(),
+        page: currentPage.get()
+    }));
 
     const [totalTasks, setTotalTasks] = useState(0);
     useEffect(() => {
         Meteor.call(
             "tasks.count",
-            showCompleted,
-            searchText,
+            filters.showCompleted,
+            filters.searchText,
             (error, result) => {
                 if (!error) {
                     setTotalTasks(result);
                 }
             }
         );
-    }, [showCompleted, searchText]);
+    }, [filters.showCompleted, filters.searchText]);
     const totalPages = Math.ceil(totalTasks / 4);
 
-    useSubscribe("tasks", showCompleted, searchText, page)();
+    useSubscribe("tasks", filters.showCompleted, filters.searchText, filters.page)();
 
     useSubscribe("tasksUsers")();
 
     const tasks = useFind(() => TasksCollection.find({}, {
         sort: { createdAt: -1 }
         }),
-        [showCompleted, searchText, page]
+        [filters.showCompleted, filters.searchText, filters.page]
     );
 
     const users = useFind(
@@ -99,7 +93,7 @@ const TasksPage = () => {
             >
                 <CustomTextField
                     label="Pesquisar tarefa"
-                    value={searchText}
+                    value={filters.searchText}
                     onChange={(evento) => {
                         searchTasksText.set(evento.target.value);
                         currentPage.set(1);
@@ -120,7 +114,7 @@ const TasksPage = () => {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={showCompleted}
+                            checked={filters.showCompleted}
                             onChange={(evento) => {
                                 showCompletedTasks.set(evento.target.checked);
                                 currentPage.set(1);
@@ -166,9 +160,9 @@ const TasksPage = () => {
                     <CustomButton
                         text="Anterior"
                         fullWidth={false}
-                        disabled={page === 1}
+                        disabled={filters.page === 1}
                         onClick={() => {
-                            currentPage.set(page - 1);
+                            currentPage.set(filters.page - 1);
                         }}
                         sx={{
                             width: 60,
@@ -186,15 +180,15 @@ const TasksPage = () => {
                             fontSize:"13px"
                         }}
                     >
-                        {page}
+                        {filters.page}
                     </Typography>
 
                     <CustomButton
                         text="Próxima"
                         fullWidth={false}
-                        disabled={page >= totalPages}
+                        disabled={filters.page >= totalPages}
                         onClick={() => {
-                            currentPage.set(page + 1)
+                            currentPage.set(filters.page + 1)
                         }}
                         sx={{
                             width: 60,

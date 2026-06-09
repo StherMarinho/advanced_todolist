@@ -28,7 +28,6 @@ Meteor.methods({
     },
 
     async "users.updateEmail"({ email }) {
-        console.log("inicio metodo");
         if (!this.userId) {
             throw new Meteor.Error(
                 "NOT_AUTHORIZED",
